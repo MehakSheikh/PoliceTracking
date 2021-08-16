@@ -1,0 +1,11 @@
+<!--~
+  Copyright (c)  - All Rights Reserved
+  Unauthorized copying of this file, via any medium is strictly prohibited
+  Created and written by  <>, 12.8.2016
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

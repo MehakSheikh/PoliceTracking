@@ -19,11 +19,25 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+	signingConfigs {
+		release {
+			storeFile file('./keys/police_tracking.jks')
+			storePassword 'policetracking'
+			keyAlias = 'police tracking'
+			keyPassword 'policetracking'
+		}
+	}
+
     buildTypes {
         release {
+			signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+		debug{
+			signingConfig signingConfigs.release
+		}
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

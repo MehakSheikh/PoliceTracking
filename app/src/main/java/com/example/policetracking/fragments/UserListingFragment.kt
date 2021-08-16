@@ -4,12 +4,14 @@ import com.example.policetracking.viewmodels.LoginActivityViewModel
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.example.policetracking.R
+import com.example.policetracking.Utils
 import com.example.policetracking.adapters.DataItemUserListing
 import com.example.policetracking.adapters.ListAdapterUsers
 import com.example.policetracking.databinding.FragmentUserListingBinding
 import com.example.policetracking.models.helper.UserModel
 import com.example.policetracking.utils.ItemClickListener
 import com.example.policetracking.utils.Toast
+import com.example.policetracking.utils.handleClickOnce
 
 
 internal class UserListingFragment private constructor() : BaseFragment() {
@@ -26,7 +28,14 @@ internal class UserListingFragment private constructor() : BaseFragment() {
     private fun setAdapter() {
         mBinding.apply {
             mAdapter = ListAdapterUsers(ItemClickListener { model, view ->
-                requireContext().Toast(model.toString())
+
+                view.handleClickOnce()
+
+                mViewModel.currentUser = model
+
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .add(R.id.fl_signup_container, MapsFragment.instance(), Utils.Maps_Fragment)
+                    .commit()
             })
 
             mListUsers.add(

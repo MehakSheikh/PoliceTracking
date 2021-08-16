@@ -9,5 +9,7 @@ public class Utils {
     public static final String SignUp_Fragment = "SignUp_Fragment";
     public static final String ForgotPassword_Fragment = "ForgotPassword_Fragment";
   public static final String Home_Fragment = "HomeFragment";
+  public static final String User_Listing_Fragment = "UserListingFragment";
+  public static final String Maps_Fragment = "MapsFragment";
 
 }

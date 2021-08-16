@@ -4,15 +4,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="model"
+            type="com.example.policetracking.models.helper.UserModel" />
+
+        <variable
+            name="clickListener"
+            type="com.example.policetracking.utils.ItemClickListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{(view)->clickListener.onClick(model,view)}"
         android:padding="@dimen/default_16_dp">
 
         <TextView
             android:id="@+id/txt_view_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{model.name}"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -4,16 +4,69 @@ import com.example.policetracking.viewmodels.LoginActivityViewModel
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.example.policetracking.R
+import com.example.policetracking.adapters.DataItemUserListing
+import com.example.policetracking.adapters.ListAdapterUsers
 import com.example.policetracking.databinding.FragmentUserListingBinding
+import com.example.policetracking.models.helper.UserModel
+import com.example.policetracking.utils.ItemClickListener
+import com.example.policetracking.utils.Toast
 
 
 internal class UserListingFragment private constructor() : BaseFragment() {
 
     private lateinit var mBinding: FragmentUserListingBinding
     private lateinit var mViewModel: LoginActivityViewModel
+    private lateinit var mAdapter: ListAdapterUsers
+    private var mListUsers: ArrayList<UserModel> = arrayListOf()
 
     override fun init() {
+        setAdapter()
+    }
 
+    private fun setAdapter() {
+        mBinding.apply {
+            mAdapter = ListAdapterUsers(ItemClickListener { model, view ->
+                requireContext().Toast(model.toString())
+            })
+
+            mListUsers.add(
+                UserModel(
+                    id = "1",
+                    name = "Talha"
+                )
+            )
+            mListUsers.add(
+                UserModel(
+                    id = "2",
+                    name = "Ahmed"
+                )
+            )
+            mListUsers.add(
+                UserModel(
+                    id = "3",
+                    name = "Mehak"
+                )
+            )
+            mListUsers.add(
+                UserModel(
+                    id = "4",
+                    name = "Sheikh"
+                )
+            )
+
+            setAdapterData()
+
+            recyclerViewUsers.adapter = mAdapter
+        }
+    }
+
+    private fun setAdapterData() {
+        mAdapter.submitList(
+            mListUsers.map {
+                DataItemUserListing.UserItemListing(it)
+            }
+        )
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun setListeners() {

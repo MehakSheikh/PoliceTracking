@@ -22,6 +22,7 @@ import com.example.policetracking.Message;
 import com.example.policetracking.MyFragmentManager;
 import com.example.policetracking.R;
 import com.example.policetracking.fragments.LoginFragment;
+import com.example.policetracking.viewmodels.LoginActivityViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.lifecycle.ViewModelProviders;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
     FrameLayout flContainer;
     LocationManager mLocationManager;
     private WebSocketClient webSocketClient;
+	private LoginActivityViewModel mViewModel;
 
     /*   {
            try {
@@ -60,6 +63,8 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
 
         toolbar_title = findViewById(R.id.toolbar_title);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+	    mViewModel = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
 
      /*   mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 

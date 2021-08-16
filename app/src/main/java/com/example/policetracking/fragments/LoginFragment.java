@@ -181,7 +181,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         fragmentManager
                 .beginTransaction()
                 //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                .replace(R.id.fl_signup_container, new HomeUserFragment(),
+                .replace(R.id.fl_signup_container, UserListingFragment.instance(),
                         Utils.Home_Fragment).commit();
     }
 }

@@ -4,12 +4,12 @@ import com.example.policetracking.viewmodels.LoginActivityViewModel
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import com.example.policetracking.R
-import com.example.policetracking.databinding.FragmentDefaultBinding
+import com.example.policetracking.databinding.FragmentUserListingBinding
 
 
-internal class DefaultFragment : BaseFragment() {
+internal class UserListingFragment private constructor() : BaseFragment() {
 
-    private lateinit var mBinding: FragmentDefaultBinding
+    private lateinit var mBinding: FragmentUserListingBinding
     private lateinit var mViewModel: LoginActivityViewModel
 
     override fun init() {
@@ -23,14 +23,15 @@ internal class DefaultFragment : BaseFragment() {
 
     }
 
-    override fun getFragmentLayout() = R.layout.fragment_default
+    override fun getFragmentLayout() = R.layout.fragment_user_listing
 
     override fun getViewBinding() {
-        mBinding = binding as FragmentDefaultBinding
+        mBinding = binding as FragmentUserListingBinding
     }
 
     override fun getViewModel() {
-        mViewModel = ViewModelProviders.of(requireActivity()).get(LoginActivityViewModel::class.java)
+        mViewModel =
+            ViewModelProviders.of(requireActivity()).get(LoginActivityViewModel::class.java)
     }
 
     override fun observe() {
@@ -42,6 +43,11 @@ internal class DefaultFragment : BaseFragment() {
 
     override fun onClick(v: View?) {
 
+    }
+
+    companion object {
+        @JvmStatic
+        fun instance() = UserListingFragment()
     }
 
 }

@@ -1,4 +1,4 @@
-import com.example.policetracking.viewmodels.BaseViewModel
+package com.example.policetracking.viewmodels
 
 internal class LoginActivityViewModel : BaseViewModel() {
 

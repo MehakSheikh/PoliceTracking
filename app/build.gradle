@@ -1,5 +1,8 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -26,6 +29,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+	buildFeatures {
+		dataBinding true
+	}
+
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
 }
 
 dependencies {
@@ -44,4 +55,16 @@ dependencies {
     implementation ('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
+
+	implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+	implementation 'androidx.core:core-ktx:1.5.0'
+
+	//Kotlin Reflect
+	implementation "org.jetbrains.kotlin:kotlin-reflect:$version_kotlin_reflect"
+
+	// ViewModel and LiveData
+	implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+
+	//Google MAP
+	implementation "com.google.android.gms:play-services-maps:$version_map"
 }

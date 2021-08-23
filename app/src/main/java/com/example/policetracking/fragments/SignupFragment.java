@@ -4,6 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +23,7 @@ import com.example.policetracking.utils.Utils;
 
 public class SignupFragment extends CoreFragment implements OnClickListener {
     private static View view;
-    private static EditText firstName, emailId, mobileNumber, branch,
+    private static EditText firstName, cnic, mobileNumber, branch,
             password, confirmPassword;
     private static TextView login;
     private static Button signUpButton;
@@ -45,7 +47,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
         fragmentManager = getActivity().getSupportFragmentManager();
 
         firstName = (EditText) view.findViewById(R.id.firstName);
-        emailId = (EditText) view.findViewById(R.id.userEmailId);
+        cnic = (EditText) view.findViewById(R.id.cnic);
         mobileNumber = (EditText) view.findViewById(R.id.mobileNumber);
         branch = (EditText) view.findViewById(R.id.branch);
         password = (EditText) view.findViewById(R.id.password);
@@ -64,6 +66,34 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
             terms_conditions.setTextColor(csl);
         } catch (Exception e) {
         }*/
+        cnic.addTextChangedListener(new TextWatcher() {
+            int len = 0;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                String str = cnic.getText().toString();
+                len = str.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    String str = s.toString();
+
+                    String val = cnic.getText().toString();
+                    if ((val.length() == 5 && len < val.length()) || (val.length() == 13 && len < val.length())) {
+                        str += "-";
+                        cnic.setText(str);
+                        cnic.setSelection(str.length());
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     // Set Listeners
@@ -96,7 +126,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
 
         // Get all edittext texts
         String getfirstName = firstName.getText().toString();
-        String getEmailId = emailId.getText().toString();
+        String getCNIC = cnic.getText().toString();
         String getMobileNumber = mobileNumber.getText().toString();
         String getbranch = branch.getText().toString();
         String getPassword = password.getText().toString();
@@ -104,11 +134,11 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
 
         // Pattern match for email id
         Pattern p = Pattern.compile(Utils.regEx);
-        Matcher m = p.matcher(getEmailId);
+       // Matcher m = p.matcher(getEmailId);
 
         // Check if all strings are null or not
         if (getfirstName.equals("") || getfirstName.length() == 0
-                || getEmailId.equals("") || getEmailId.length() == 0
+                || getCNIC.equals("") || getCNIC.length() == 0
                 || getMobileNumber.equals("") || getMobileNumber.length() == 0
                 || getbranch.equals("") || getbranch.length() == 0
                 || getPassword.equals("") || getPassword.length() == 0
@@ -116,8 +146,8 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
                 || getConfirmPassword.length() == 0)
             Toast.makeText(getContext(), " All fields are required.", Toast.LENGTH_SHORT).show();
             // Check if email id valid or not
-        else if (!m.find())
-            Toast.makeText(getContext(), "Your Email Id is Invalid.", Toast.LENGTH_SHORT).show();
+//        else if (!m.find())
+//            Toast.makeText(getContext(), "Your Email Id is Invalid.", Toast.LENGTH_SHORT).show();
             // Check if both password should be equal
         else if (!getConfirmPassword.equals(getPassword))
             Toast.makeText(getContext(), "\"Both password doesn't match.", Toast.LENGTH_SHORT).show();

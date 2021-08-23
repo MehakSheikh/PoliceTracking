@@ -2,7 +2,9 @@ package com.example.policetracking.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -74,7 +76,34 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         show_hide_password = (CheckBox) view
                 .findViewById(R.id.show_hide_password);
         loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
+        emailid.addTextChangedListener(new TextWatcher() {
+            int len = 0;
 
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                String str = emailid.getText().toString();
+                len = str.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    String str = s.toString();
+
+                    String val = emailid.getText().toString();
+                    if ((val.length() == 5 && len < val.length()) || (val.length() == 13 && len < val.length())) {
+                        str += "-";
+                        emailid.setText(str);
+                        emailid.setSelection(str.length());
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
      /*   // Load ShakeAnimation
         shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.shake);
@@ -90,6 +119,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
             signUp.setTextColor(csl);
         } catch (Exception e) {
         }*/
+
     }
 
     // Set Listeners

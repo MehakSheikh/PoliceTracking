@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
     android:padding="20dp" >
 
     <LinearLayout
@@ -27,16 +28,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:maxLength="15"
             android:background="@android:color/transparent"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:hint="@string/cnic"
-            android:inputType="textEmailAddress"
+            android:inputType="number"
             android:padding="10dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="16sp" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"

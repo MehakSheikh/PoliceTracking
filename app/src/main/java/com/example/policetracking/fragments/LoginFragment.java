@@ -41,7 +41,7 @@ import retrofit2.Response;
 public class LoginFragment extends CoreFragment implements OnClickListener {
 
     RelativeLayout rootLayout;
-    private static EditText emailid, password;
+    private static EditText et_cnic, password;
     private static Button loginButton;
     private static TextView forgotPassword, signUp;
     private static CheckBox show_hide_password;
@@ -68,7 +68,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     private void initViews(View view) {
         fragmentManager = getActivity().getSupportFragmentManager();
 
-        emailid = (EditText) view.findViewById(R.id.login_emailid);
+        et_cnic = (EditText) view.findViewById(R.id.et_cnic);
         password = (EditText) view.findViewById(R.id.login_password);
         loginButton = (Button) view.findViewById(R.id.loginBtn);
         forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
@@ -76,12 +76,12 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         show_hide_password = (CheckBox) view
                 .findViewById(R.id.show_hide_password);
         loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
-        emailid.addTextChangedListener(new TextWatcher() {
+        et_cnic.addTextChangedListener(new TextWatcher() {
             int len = 0;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                String str = emailid.getText().toString();
+                String str = et_cnic.getText().toString();
                 len = str.length();
             }
 
@@ -90,11 +90,11 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                 try {
                     String str = s.toString();
 
-                    String val = emailid.getText().toString();
+                    String val = et_cnic.getText().toString();
                     if ((val.length() == 5 && len < val.length()) || (val.length() == 13 && len < val.length())) {
                         str += "-";
-                        emailid.setText(str);
-                        emailid.setSelection(str.length());
+                        et_cnic.setText(str);
+                        et_cnic.setSelection(str.length());
                     }
                 } catch (Exception ignored) {
                 }
@@ -195,29 +195,29 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     // Check Validation before login
     private void checkValidation() {
         // Get email id and password
-        String getEmailId = emailid.getText().toString();
+        String getet_cnic = et_cnic.getText().toString();
         String getPassword = password.getText().toString();
 
         // Check patter for email id
    /*     Pattern p = Pattern.compile(Utils.regEx);
 
-        Matcher m = p.matcher(getEmailId);
+        Matcher m = p.matcher(getet_cnic);
 */
         // Check for both field is empty or not
-        if (getEmailId.equals("") || getEmailId.length() == 0
+        if (getet_cnic.equals("") || getet_cnic.length() == 0
                 || getPassword.equals("") || getPassword.length() == 0) {
             final AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(getContext()).create();
 
-            AlertDialog alertDialog =  new AlertDialog.Builder(getContext())
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                     .setTitle("Enter CNIC and Password")
-                  //  .setMessage("Are you sure you want to exit?")
+                    //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                         }
                     }).setNegativeButton(null, null).show();
-          //  loginLayout.startAnimation(shakeAnimation);
+            //  loginLayout.startAnimation(shakeAnimation);
            /* AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
                     getContext());
 
@@ -255,15 +255,15 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
 
 // Showing Alert Dialog
             alertDialog2.show();*/
-     //       Toast.makeText(getActivity(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
-     //    Toast.makeText(getContext(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
-         //Toast.makeText(getbas,   "Enter both credentials.", Toast.LENGTH_LONG).show();
+            //       Toast.makeText(getActivity(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
+            //    Toast.makeText(getContext(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getbas,   "Enter both credentials.", Toast.LENGTH_LONG).show();
         }
         // Check if email id is valid or not
 //        else if (!m.find())
 //            Toast.makeText(getContext(),   "Your Email Id is Invalid.", Toast.LENGTH_SHORT).show();
-            // Else do login and do your stuff
-        else{
+        // Else do login and do your stuff
+        else {
             fragmentManager
                     .beginTransaction()
                     //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)

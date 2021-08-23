@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.policetracking">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -12,8 +13,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PoliceTracking">
-
+        android:testOnly="false"
+        android:theme="@style/Theme.Design.NoActionBar"
+     >
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

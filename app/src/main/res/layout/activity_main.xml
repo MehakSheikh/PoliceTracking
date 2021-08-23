@@ -5,8 +5,10 @@
     android:id="@+id/content_signup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"
     android:background="@color/background_color"
-    android:animateLayoutChanges="true">
+>
 
 
    <!--     <androidx.appcompat.widget.Toolbar

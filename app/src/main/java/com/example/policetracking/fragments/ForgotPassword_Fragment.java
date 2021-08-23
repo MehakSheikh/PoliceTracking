@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.policetracking.MyFragmentManager;
 import com.example.policetracking.R;
-import com.example.policetracking.Utils;
+import com.example.policetracking.utils.Utils;
 
 public class ForgotPassword_Fragment extends Fragment implements
         OnClickListener {

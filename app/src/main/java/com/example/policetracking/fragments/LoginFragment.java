@@ -1,5 +1,6 @@
 package com.example.policetracking.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
@@ -17,11 +18,23 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.policetracking.R;
-import com.example.policetracking.Utils;
+import com.example.policetracking.activities.LoginActivity;
+import com.example.policetracking.activities.MainActivity;
+import com.example.policetracking.utils.Utils;
+import com.example.policetracking.network.ServerRequests;
+import com.example.policetracking.utils.NetworkConnection;
+import com.example.policetracking.viewmodels.LoginRequest;
+import com.example.policetracking.viewmodels.LoginResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginFragment extends CoreFragment implements OnClickListener {
 
@@ -48,6 +61,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         setListeners();
         return view;
     }
+
     // Initiate Views
     private void initViews(View view) {
         fragmentManager = getActivity().getSupportFragmentManager();
@@ -131,7 +145,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                 // Replace forgot password fragment with animation
                 fragmentManager
                         .beginTransaction()
-                      //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+                        //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
                         .replace(R.id.fl_signup_container,
                                 new ForgotPassword_Fragment(),
                                 Utils.ForgotPassword_Fragment).commit();
@@ -140,7 +154,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                 // Replace signup frgament with animation
                 fragmentManager
                         .beginTransaction()
-                      //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+                        //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
                         .replace(R.id.fl_signup_container, new SignupFragment(),
                                 Utils.SignUp_Fragment).commit();
                 break;
@@ -150,38 +164,118 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
 
     // Check Validation before login
     private void checkValidation() {
-      /*  // Get email id and password
+        // Get email id and password
         String getEmailId = emailid.getText().toString();
         String getPassword = password.getText().toString();
 
         // Check patter for email id
-        Pattern p = Pattern.compile(Utils.regEx);
+   /*     Pattern p = Pattern.compile(Utils.regEx);
 
         Matcher m = p.matcher(getEmailId);
-
+*/
         // Check for both field is empty or not
         if (getEmailId.equals("") || getEmailId.length() == 0
                 || getPassword.equals("") || getPassword.length() == 0) {
+            final AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(getContext()).create();
+
+            AlertDialog alertDialog =  new AlertDialog.Builder(getContext())
+                    .setTitle("Enter CNIC and Password")
+                  //  .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setNegativeButton(null, null).show();
           //  loginLayout.startAnimation(shakeAnimation);
-            Toast.makeText(getContext(),   "Enter both credentials.", Toast.LENGTH_SHORT).show();
+           /* AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                    getContext());
+
+// Setting Dialog Title
+            alertDialog2.setTitle("Please enter email and password");
+
+// Setting Dialog Message
+          //  alertDialog2.setMessage("Are you sure you want delete this file?");
+
+// Setting Icon to Dialog
+           // alertDialog2.setIcon(R.drawable.common_google_signin_btn_icon_dark);
+
+// Setting Positive "Yes" Btn
+            alertDialog2.setPositiveButton("YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Write your code here to execute after dialog
+                          *//*  Toast.makeText(getActivity(),
+                                    "You clicked on YES", Toast.LENGTH_SHORT)
+                                    .show();*//*
+                        }
+                    });
+
+// Setting Negative "NO" Btn
+            alertDialog2.setNegativeButton("NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Write your code here to execute after dialog
+                           *//* Toast.makeText(getActivity(),
+                                    "You clicked on NO", Toast.LENGTH_SHORT)
+                                    .show();
+                            dialog.cancel();*//*
+                        }
+                    });
+
+// Showing Alert Dialog
+            alertDialog2.show();*/
+     //       Toast.makeText(getActivity(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
+     //    Toast.makeText(getContext(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
+         //Toast.makeText(getbas,   "Enter both credentials.", Toast.LENGTH_LONG).show();
         }
         // Check if email id is valid or not
-        else if (!m.find())
-            Toast.makeText(getContext(),   "Your Email Id is Invalid.", Toast.LENGTH_SHORT).show();
+//        else if (!m.find())
+//            Toast.makeText(getContext(),   "Your Email Id is Invalid.", Toast.LENGTH_SHORT).show();
             // Else do login and do your stuff
         else{
             fragmentManager
                     .beginTransaction()
                     //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                    .replace(R.id.fl_signup_container, new HomeFragment(),
-                            Utils.Home_Fragment).commit();
-            Toast.makeText(getActivity(), "Do Login.", Toast.LENGTH_SHORT)
+                    .replace(R.id.fl_signup_container, UserListingFragment.instance(),
+                            Utils.User_Listing_Fragment).commit();
+            Toast.makeText(getActivity(), "Login.", Toast.LENGTH_SHORT)
                     .show();
-        }*/
-        fragmentManager
-                .beginTransaction()
-                //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                .replace(R.id.fl_signup_container, UserListingFragment.instance(),
-                        Utils.User_Listing_Fragment).commit();
+        }
+    }
+
+    public void LoginUser(String email, String pwd) {
+        LoginRequest loginReq = new LoginRequest();
+        loginReq.setEmail(email);
+        loginReq.setPassword(pwd);
+        final Call<LoginResponse> loginRequest = ServerRequests.getInstance(getContext()).loginUser(loginReq);
+        if (NetworkConnection.isOnline(getContext())) {
+            loginRequest.enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body().getUserType() == 1) {
+                            fragmentManager
+                                    .beginTransaction()
+                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+                                    .replace(R.id.fl_signup_container, UserListingFragment.instance(),
+                                            Utils.User_Listing_Fragment).commit();
+                        } else {
+                            fragmentManager
+                                    .beginTransaction()
+                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+                                    .replace(R.id.fl_signup_container, new HomeFragment(),
+                                            Utils.Home_Fragment).commit();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
+        }
     }
 }

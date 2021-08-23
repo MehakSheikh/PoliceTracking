@@ -15,11 +15,15 @@
         android:textStyle="bold" />-->
 
    <LinearLayout
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
        android:orientation="vertical"
+       android:paddingTop="54dp"
+       android:paddingStart="20dp"
+       android:paddingEnd="20dp"
+       android:paddingBottom="20dp"
        android:background="@color/background_color"
-       android:padding="20dp">
+      >
    <EditText
         android:id="@+id/firstName"
         android:layout_width="fill_parent"

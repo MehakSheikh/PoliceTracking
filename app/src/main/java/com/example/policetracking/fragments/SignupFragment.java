@@ -14,12 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.policetracking.MyFragmentManager;
 import com.example.policetracking.R;
-import com.example.policetracking.Utils;
+import com.example.policetracking.utils.Utils;
 
 public class SignupFragment extends CoreFragment implements OnClickListener {
     private static View view;

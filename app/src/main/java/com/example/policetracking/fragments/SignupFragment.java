@@ -19,16 +19,26 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.policetracking.R;
+import com.example.policetracking.network.ServerRequests;
+import com.example.policetracking.utils.NetworkConnection;
 import com.example.policetracking.utils.Utils;
+import com.example.policetracking.viewmodels.LoginRequest;
+import com.example.policetracking.viewmodels.LoginResponse;
+import com.example.policetracking.viewmodels.RegisterUser;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignupFragment extends CoreFragment implements OnClickListener {
     private static View view;
     private static EditText firstName, cnic, mobileNumber, branch,
-            password, confirmPassword;
+            password, confirmPassword, fatherName;
     private static TextView login;
     private static Button signUpButton;
     private static CheckBox terms_conditions;
     private static FragmentManager fragmentManager;
+
     public SignupFragment() {
 
     }
@@ -47,6 +57,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
         fragmentManager = getActivity().getSupportFragmentManager();
 
         firstName = (EditText) view.findViewById(R.id.firstName);
+        fatherName = (EditText) view.findViewById(R.id.fatherName);
         cnic = (EditText) view.findViewById(R.id.cnic);
         mobileNumber = (EditText) view.findViewById(R.id.mobileNumber);
         branch = (EditText) view.findViewById(R.id.branch);
@@ -56,7 +67,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
         login = (TextView) view.findViewById(R.id.already_user);
         terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
 
-      /*  // Setting text selector over textviews
+        /*  // Setting text selector over textviews
         XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
         try {
             ColorStateList csl = ColorStateList.createFromXml(getResources(),
@@ -123,18 +134,20 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
 
     // Check Validation Method
     private void checkValidation() {
-
         // Get all edittext texts
         String getfirstName = firstName.getText().toString();
+        String getfatherName = fatherName.getText().toString();
         String getCNIC = cnic.getText().toString();
         String getMobileNumber = mobileNumber.getText().toString();
         String getbranch = branch.getText().toString();
         String getPassword = password.getText().toString();
         String getConfirmPassword = confirmPassword.getText().toString();
+        String rank = "";
+        String buckleNum = "";
 
         // Pattern match for email id
         Pattern p = Pattern.compile(Utils.regEx);
-       // Matcher m = p.matcher(getEmailId);
+        // Matcher m = p.matcher(getEmailId);
 
         // Check if all strings are null or not
         if (getfirstName.equals("") || getfirstName.length() == 0
@@ -155,8 +168,52 @@ public class SignupFragment extends CoreFragment implements OnClickListener {
         else if (!terms_conditions.isChecked())
             Toast.makeText(getContext(), "  \"Please select Terms and Conditions.", Toast.LENGTH_SHORT).show();
             // Else do signup or do your stuff
-        else
+        else {
+            registerUser(getfirstName, getfatherName, getCNIC, getMobileNumber, getbranch, rank, buckleNum, getPassword);
             Toast.makeText(getActivity(), "Do SignUp.", Toast.LENGTH_SHORT)
                     .show();
+        }
+    }
+
+    public void registerUser(String fname, String father_name, String CNIC, String mblNum, String branch, String rank, String buckleNum, String pwd) {
+        RegisterUser registerUser = new RegisterUser();
+        registerUser.setName(fname);
+        registerUser.setFatherName(father_name);
+        registerUser.setBuckleNumber(buckleNum);
+        registerUser.setRankId(rank);
+        registerUser.setCnic(CNIC);
+        registerUser.setBranchId(branch);
+        registerUser.setContact(mblNum);
+        registerUser.setPassword(pwd);
+
+        final Call<RegisterUser> loginRequest = ServerRequests.getInstance(getContext()).registerUser(registerUser);
+        if (NetworkConnection.isOnline(getContext())) {
+            loginRequest.enqueue(new Callback<RegisterUser>() {
+                @Override
+                public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
+                    if (response.isSuccessful()) {
+                        /*if (response.body().getUserType() == 1) {
+                            fragmentManager
+                                    .beginTransaction()
+                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+                                    .replace(R.id.fl_signup_container, UserListingFragment.instance(),
+                                            Utils.User_Listing_Fragment).commit();
+                        } else {
+                            fragmentManager
+                                    .beginTransaction()
+                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+                                    .replace(R.id.fl_signup_container, new HomeFragment(),
+                                            Utils.Home_Fragment).commit();
+                        }*/
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RegisterUser> call, Throwable t) {
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
+        }
     }
 }

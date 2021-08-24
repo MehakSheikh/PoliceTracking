@@ -195,19 +195,17 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     // Check Validation before login
     private void checkValidation() {
         // Get email id and password
-        String getet_cnic = et_cnic.getText().toString();
-        String getPassword = password.getText().toString();
+        String cnic = et_cnic.getText().toString();
+        String pwd = password.getText().toString();
 
         // Check patter for email id
    /*     Pattern p = Pattern.compile(Utils.regEx);
 
-        Matcher m = p.matcher(getet_cnic);
+        Matcher m = p.matcher(cnic);
 */
         // Check for both field is empty or not
-        if (getet_cnic.equals("") || getet_cnic.length() == 0
-                || getPassword.equals("") || getPassword.length() == 0) {
-            final AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(getContext()).create();
-
+        if ((cnic.equals("") || cnic.length() == 0)
+                && (pwd.equals("") || pwd.length() == 0)) {
             AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                     .setTitle("Enter CNIC and Password")
                     //  .setMessage("Are you sure you want to exit?")
@@ -217,58 +215,30 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
 
                         }
                     }).setNegativeButton(null, null).show();
-            //  loginLayout.startAnimation(shakeAnimation);
-           /* AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
-                    getContext());
-
-// Setting Dialog Title
-            alertDialog2.setTitle("Please enter email and password");
-
-// Setting Dialog Message
-          //  alertDialog2.setMessage("Are you sure you want delete this file?");
-
-// Setting Icon to Dialog
-           // alertDialog2.setIcon(R.drawable.common_google_signin_btn_icon_dark);
-
-// Setting Positive "Yes" Btn
-            alertDialog2.setPositiveButton("YES",
-                    new DialogInterface.OnClickListener() {
+        }else if (cnic.equals("") || cnic.length() == 0){
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                    .setTitle("Enter CNIC")
+                    //  .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // Write your code here to execute after dialog
-                          *//*  Toast.makeText(getActivity(),
-                                    "You clicked on YES", Toast.LENGTH_SHORT)
-                                    .show();*//*
-                        }
-                    });
 
-// Setting Negative "NO" Btn
-            alertDialog2.setNegativeButton("NO",
-                    new DialogInterface.OnClickListener() {
+                        }
+                    }).setNegativeButton(null, null).show();
+        }else if(pwd.equals("") || pwd.length() == 0){
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                    .setTitle("Enter Password")
+                    //  .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // Write your code here to execute after dialog
-                           *//* Toast.makeText(getActivity(),
-                                    "You clicked on NO", Toast.LENGTH_SHORT)
-                                    .show();
-                            dialog.cancel();*//*
-                        }
-                    });
 
-// Showing Alert Dialog
-            alertDialog2.show();*/
-            //       Toast.makeText(getActivity(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
-            //    Toast.makeText(getContext(),   "Enter both credentials.", Toast.LENGTH_LONG).show();
-            //Toast.makeText(getbas,   "Enter both credentials.", Toast.LENGTH_LONG).show();
+                        }
+                    }).setNegativeButton(null, null).show();
         }
-        // Check if email id is valid or not
-//        else if (!m.find())
-//            Toast.makeText(getContext(),   "Your Email Id is Invalid.", Toast.LENGTH_SHORT).show();
-        // Else do login and do your stuff
+
         else {
-            fragmentManager
-                    .beginTransaction()
-                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                    .replace(R.id.fl_signup_container, UserListingFragment.instance(),
-                            Utils.User_Listing_Fragment).commit();
+            LoginUser(cnic,pwd);
             Toast.makeText(getActivity(), "Login.", Toast.LENGTH_SHORT)
                     .show();
         }

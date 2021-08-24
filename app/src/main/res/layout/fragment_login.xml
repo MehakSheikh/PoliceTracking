@@ -53,6 +53,7 @@
             android:gravity="center_vertical"
             android:hint="@string/passowrd"
             android:inputType="textPassword"
+            android:maxLength="20"
             android:padding="10dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"

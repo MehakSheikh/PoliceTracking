@@ -28,5 +28,7 @@ public class Utils {
   public static final String User_Listing_Fragment = "UserListingFragment";
   public static final String Maps_Fragment = "MapsFragment";
 
+    private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/api/";
+
 
 }

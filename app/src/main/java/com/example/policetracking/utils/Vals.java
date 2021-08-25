@@ -21,16 +21,12 @@ public class Vals {
 
     public static final String TOKEN = "token";
 
-    private static final String WSS_URL_LOCAL = "ws://10.0.0.183:8080/ws";
-    private static final String WSS_URL_STAGING = "wss://staging.myhealthathand.com/ws";
-    private static final String WSS_URL_RELEASE = "wss://app-api.myhealthathand.com/ws";
-    private static final String WSS_URL_DEV = "wss://dev.myhealthathand.com/ws";
 
-    private static final String BASE_URL_STAGING = "https://staging.myhealthathand.com/";
-    private static final String BASE_URL_RELEASE = "https://app-api.myhealthathand.com/";
-    private static final String BASE_URL_DEV = "https://dev.myhealthathand.com/";
+    private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/";
+    private static final String BASE_URL_RELEASE = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/";
+    private static final String BASE_URL_DEV = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/";
 
-    private static final String BASE_URL_LOCAL = "http://10.0.0.183:8000/";
+    private static final String BASE_URL_LOCAL = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/";
 
     public static String GET_BASE_URL(Context context) {
 
@@ -39,10 +35,6 @@ public class Vals {
 
         TinyDB tinyDB = TinyDB.getInstance();
 
-        if (tinyDB.getBoolean("use_custom_ip_for_wss")) {
-            return "http://" + tinyDB.getString("custom_ip_for_wss") + ":8000";
-
-        } else {
                 if (BuildConfig.FLAVOR.equals("dev")) {
                     return BASE_URL_DEV;
                 } else if (BuildConfig.FLAVOR.equals("staging")) {
@@ -54,34 +46,6 @@ public class Vals {
                 } else {
                     return BASE_URL_STAGING;
                 }
-        }
-    }
-
-    public static String GET_WSS_URL(Context context) {
-
-        if (TinyDB.dbContext == null)
-            TinyDB.dbContext = context;
-
-        TinyDB tinyDB = TinyDB.getInstance();
-
-        if (tinyDB.getBoolean("use_custom_ip_for_wss")) {
-            return "ws://" + tinyDB.getString("custom_ip_for_wss") + ":8080/ws";
-
-        } else {
-
-                if (BuildConfig.FLAVOR.equals("dev")) {
-                    return WSS_URL_DEV;
-                } else if (BuildConfig.FLAVOR.equals("staging")) {
-                    return WSS_URL_STAGING;
-                } else if (BuildConfig.FLAVOR.equals("live")) {
-                    return WSS_URL_RELEASE;
-                } else if (BuildConfig.FLAVOR.equals("local")) {
-                    return WSS_URL_LOCAL;
-                } else {
-                    return WSS_URL_DEV;
-                }
-
-        }
     }
 
     public static int dpToPx(int dp) {

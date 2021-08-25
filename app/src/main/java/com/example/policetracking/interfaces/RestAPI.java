@@ -24,7 +24,7 @@ public interface RestAPI {
     @POST("auth/register")
     Call<RegisterUser> registerUser(@Body RegisterUser registerUser);
 
-    @GET("api/rank")
+    @GET("rank")
     Call<RanksResponseModel> getRanks();
 
     @GET("branch")

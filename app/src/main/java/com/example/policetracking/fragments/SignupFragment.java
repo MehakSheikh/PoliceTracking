@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.policetracking.R;
+import com.example.policetracking.adapters.NothingSelectedSpinnerAdapter;
 import com.example.policetracking.network.ServerRequests;
 import com.example.policetracking.utils.NetworkConnection;
 import com.example.policetracking.utils.Utils;
@@ -35,13 +36,15 @@ import retrofit2.Response;
 public class SignupFragment extends CoreFragment implements OnClickListener, AdapterView.OnItemSelectedListener {
     private static View view;
     private static EditText firstName, cnic, branch, mobileNumber,
-            password, confirmPassword, fatherName;
+            password, confirmPassword, fatherName, buckleNumber;
     private static TextView login;
     private static Button signUpButton;
     private static CheckBox terms_conditions;
     private static FragmentManager fragmentManager;
-    private static String[] arr_ranks ;
-    Spinner spBranch;
+    private static String[] arr_ranks;
+    Spinner spBranch, spRanks;
+    String getfirstName, getfatherName, getCNIC, getMobileNumber, getbranch, rank, buckleNum, getPassword , getConfirmPassword;
+    private static String[] paths = {"1", "2", "3"};
 
     public SignupFragment() {
 
@@ -65,13 +68,42 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         cnic = (EditText) view.findViewById(R.id.cnic);
         mobileNumber = (EditText) view.findViewById(R.id.mobileNumber);
         spBranch = (Spinner) view.findViewById(R.id.spBranch);
-        branch = (EditText) view.findViewById(R.id.branch);
+        spRanks = (Spinner) view.findViewById(R.id.spRanks);
+        buckleNumber = (EditText) view.findViewById(R.id.buckleNumber);
+        // branch = (EditText) view.findViewById(R.id.branch);
         password = (EditText) view.findViewById(R.id.password);
         confirmPassword = (EditText) view.findViewById(R.id.confirmPassword);
         signUpButton = (Button) view.findViewById(R.id.signUpBtn);
         login = (TextView) view.findViewById(R.id.already_user);
         terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
 
+        ArrayAdapter<String> branchAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, paths);
+
+        branchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spBranch.setAdapter(branchAdapter);
+        spBranch.setOnItemSelectedListener(this);
+        // spBranch.setPrompt("Select Branch");
+
+        spBranch.setAdapter(
+                new NothingSelectedSpinnerAdapter(
+                        branchAdapter,
+                        R.layout.branch_spinner_row_nothing_selected,
+                        getContext()));
+
+        ArrayAdapter<String> rankAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, paths);
+
+        rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRanks.setAdapter(rankAdapter);
+        spRanks.setOnItemSelectedListener(this);
+        // spBranch.setPrompt("Select Branch");
+
+        spRanks.setAdapter(
+                new NothingSelectedSpinnerAdapter(
+                        rankAdapter,
+                        R.layout.ranks_spinner_row_nothing_selected,
+                        getContext()));
 
         getRanks();
         getBranches();
@@ -142,29 +174,32 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     // Check Validation Method
     private void checkValidation() {
         // Get all edittext texts
-        String getfirstName = firstName.getText().toString();
-        String getfatherName = fatherName.getText().toString();
-        String getCNIC = cnic.getText().toString();
-        String getMobileNumber = mobileNumber.getText().toString();
-        String getbranch = branch.getText().toString();
-        String getPassword = password.getText().toString();
-        String getConfirmPassword = confirmPassword.getText().toString();
-        String rank = "";
-        String buckleNum = "";
-        registerUser(getfirstName, getfatherName, getCNIC, getMobileNumber, getbranch, rank, buckleNum, getPassword);
+         getfirstName = firstName.getText().toString();
+         getfatherName = fatherName.getText().toString();
+         getCNIC = cnic.getText().toString();
+         getMobileNumber = mobileNumber.getText().toString();
+        if (spBranch.getSelectedItemId() != -1) {
+             getbranch = spBranch.getSelectedItem().toString();
+        }
+        if (spRanks.getSelectedItemId() != -1) {
+             rank = spRanks.getSelectedItem().toString();
+        }
+         getPassword = password.getText().toString();
+         getConfirmPassword = confirmPassword.getText().toString();
+         buckleNum = buckleNumber.getText().toString();
 
         // Pattern match for email id
-        Pattern p = Pattern.compile(Utils.regEx);
+        // Pattern p = Pattern.compile(Utils.regEx);
         // Matcher m = p.matcher(getEmailId);
 
         // Check if all strings are null or not
         if (getfirstName.equals("") || getfirstName.length() == 0
                 || getCNIC.equals("") || getCNIC.length() == 0
                 || getMobileNumber.equals("") || getMobileNumber.length() == 0
-                || getbranch.equals("") || getbranch.length() == 0
+                //     || getbranch.equals("") || getbranch.length() == 0
                 || getPassword.equals("") || getPassword.length() == 0
                 || getConfirmPassword.equals("")
-                || getConfirmPassword.length() == 0)
+                || getConfirmPassword.length() == 0 || spBranch.getSelectedItemId() == -1 || spRanks.getSelectedItemId() == -1)
             Toast.makeText(getContext(), " All fields are required.", Toast.LENGTH_SHORT).show();
             // Check if email id valid or not
 //        else if (!m.find())
@@ -178,29 +213,31 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
             // Else do signup or do your stuff
         else {
             registerUser(getfirstName, getfatherName, getCNIC, getMobileNumber, getbranch, rank, buckleNum, getPassword);
-            Toast.makeText(getActivity(), "Do SignUp.", Toast.LENGTH_SHORT)
+            Toast.makeText(getActivity(), "Signup Started.", Toast.LENGTH_SHORT)
                     .show();
         }
     }
 
     public void registerUser(String fname, String father_name, String CNIC, String mblNum, String branch, String rank, String buckleNum, String pwd) {
         RegisterUser registerUser = new RegisterUser();
-    /*    registerUser.setName(fname);
+
+        registerUser.setName(fname);
         registerUser.setFatherName(father_name);
+        registerUser.setCnic(CNIC);
+        registerUser.setContact(mblNum);
+        registerUser.setBranchId(branch);
+        registerUser.setRankId(rank);
+        registerUser.setBuckleNumber(buckleNum);
+        registerUser.setPassword(pwd);
+
+       /* registerUser.setName("fname");
+        registerUser.setFatherName("father name");
         registerUser.setBuckleNumber("123");
         registerUser.setRankId(rank);
         registerUser.setCnic(CNIC);
         registerUser.setBranchId(branch);
-        registerUser.setContact(mblNum);
-        registerUser.setPassword(pwd);*/
-        registerUser.setName("fname");
-        registerUser.setFatherName("father name");
-        registerUser.setBuckleNumber("123");
-        registerUser.setRankId("1");
-        registerUser.setCnic(CNIC);
-        registerUser.setBranchId("2");
         registerUser.setContact("03333009977");
-        registerUser.setPassword("111");
+        registerUser.setPassword("111");*/
 
         final Call<RegisterUser> loginRequest = ServerRequests.getInstance(getContext()).registerUser(registerUser);
         if (NetworkConnection.isOnline(getContext())) {
@@ -208,6 +245,8 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 @Override
                 public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
                     if (response.isSuccessful()) {
+                        Toast.makeText(getActivity(), "Register User Successfully", Toast.LENGTH_SHORT)
+                                .show();
                         /*if (response.body().getUserType() == 1) {
                             fragmentManager
                                     .beginTransaction()
@@ -240,23 +279,20 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 @Override
                 public void onResponse(Call<RanksResponseModel> call, Response<RanksResponseModel> response) {
                     if (response.isSuccessful()) {
-              /*          arr_ranks[] = new String[]{"",""};
+                        Toast.makeText(getActivity(), "Got all Ranks Successfully", Toast.LENGTH_SHORT)
+                                .show();
+                    /*    arr_ranks[] = new String[]{"",""};
                         for(int i = 0 ; i < response.body()) {
                             arr_ranks;
-                        }
-                        response.body().getName();
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                                android.R.layout.simple_spinner_item, paths);
+                        }*/
 
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spBranch.setAdapter(adapter);
-                        spBranch.setOnItemSelectedListener(this);
-*/
+
                     }
                 }
 
                 @Override
                 public void onFailure(Call<RanksResponseModel> call, Throwable t) {
+                    Toast.makeText(getContext(), "Failure", Toast.LENGTH_LONG);
                 }
             });
         } else {
@@ -265,17 +301,20 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     }
 
     public void getBranches() {
-        final Call<BranchesResponseModel> ranks = ServerRequests.getInstance(getContext()).getBranches();
+        final Call<BranchesResponseModel> branches = ServerRequests.getInstance(getContext()).getBranches();
         if (NetworkConnection.isOnline(getContext())) {
-            ranks.enqueue(new Callback<BranchesResponseModel>() {
+            branches.enqueue(new Callback<BranchesResponseModel>() {
                 @Override
                 public void onResponse(Call<BranchesResponseModel> call, Response<BranchesResponseModel> response) {
                     if (response.isSuccessful()) {
+                        Toast.makeText(getActivity(), "Got all Branches Successfully", Toast.LENGTH_SHORT)
+                                .show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<BranchesResponseModel> call, Throwable t) {
+                    Toast.makeText(getContext(), "Failure", Toast.LENGTH_LONG);
                 }
             });
         } else {

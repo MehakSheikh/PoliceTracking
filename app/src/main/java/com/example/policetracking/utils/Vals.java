@@ -22,11 +22,11 @@ public class Vals {
     public static final String TOKEN = "token";
 
 
-    private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/api/";
-    private static final String BASE_URL_RELEASE = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/";
-    private static final String BASE_URL_DEV = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/";
+    private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/police-tracking/api/";
+    private static final String BASE_URL_RELEASE = "https://tomcat-server88.paybot.pk/police-tracking/api/";
+    private static final String BASE_URL_DEV = "https://tomcat-server88.paybot.pk/police-tracking/api/";
 
-    private static final String BASE_URL_LOCAL = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/";
+    private static final String BASE_URL_LOCAL = "https://tomcat-server88.paybot.pk/police-tracking/api/";
 
     public static String GET_BASE_URL(Context context) {
 

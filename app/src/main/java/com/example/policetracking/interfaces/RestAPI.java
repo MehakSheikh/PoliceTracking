@@ -28,7 +28,7 @@ public interface RestAPI {
     Call<RanksResponseModel> getRanks();
 
     @GET("branch")
-    Call<BranchesResponseModel> getBranches();
+    Call<RanksResponseModel> getBranches();
 
     @POST("")
     Call<LoginResponse> loginUser(@Body LoginRequest loginRequest);

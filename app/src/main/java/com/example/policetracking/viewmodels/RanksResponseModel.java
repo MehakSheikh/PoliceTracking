@@ -3,29 +3,31 @@ package com.example.policetracking.viewmodels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class RanksResponseModel {
 
-    @SerializedName("id")
+    @SerializedName("data")
     @Expose
-    private Integer id;
-    @SerializedName("name")
+    private List<Datum> data = null;
+    @SerializedName("Success")
     @Expose
-    private String name;
+    private Boolean success;
 
-    public Integer getId() {
-        return id;
+    public List<Datum> getData() {
+        return data;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setData(List<Datum> data) {
+        this.data = data;
     }
 
-    public String getName() {
-        return name;
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
 }

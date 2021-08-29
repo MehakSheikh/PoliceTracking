@@ -1,10 +1,15 @@
 package com.example.policetracking.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,12 +47,17 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     private static TextView login;
     private static Button signUpButton;
     private static CheckBox terms_conditions;
+    ProgressBar progress ;
+    RelativeLayout rl_progress_bar ;
     private static FragmentManager fragmentManager;
     private static String[] arr_ranks;
     Spinner spBranch, spRanks;
-    String getfirstName, getfatherName, getCNIC, getMobileNumber, getbranch, rank, buckleNum, getPassword , getConfirmPassword;
+    List<String> rank_list = new ArrayList<String>();
+    List<String> branch_list = new ArrayList<String>();
+    String getfirstName, getfatherName, getCNIC, getMobileNumber, buckleNum, getPassword, getConfirmPassword;
+    int getbranch, rank ;
     private static String[] paths = {"1", "2", "3"};
-
+    private Handler queueHandler;
     public SignupFragment() {
 
     }
@@ -76,37 +88,46 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         signUpButton = (Button) view.findViewById(R.id.signUpBtn);
         login = (TextView) view.findViewById(R.id.already_user);
         terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
-
-        ArrayAdapter<String> branchAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, paths);
-
-        branchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spBranch.setAdapter(branchAdapter);
-        spBranch.setOnItemSelectedListener(this);
-        // spBranch.setPrompt("Select Branch");
-
-        spBranch.setAdapter(
-                new NothingSelectedSpinnerAdapter(
-                        branchAdapter,
-                        R.layout.branch_spinner_row_nothing_selected,
-                        getContext()));
-
-        ArrayAdapter<String> rankAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, paths);
-
-        rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spRanks.setAdapter(rankAdapter);
-        spRanks.setOnItemSelectedListener(this);
-        // spBranch.setPrompt("Select Branch");
-
-        spRanks.setAdapter(
-                new NothingSelectedSpinnerAdapter(
-                        rankAdapter,
-                        R.layout.ranks_spinner_row_nothing_selected,
-                        getContext()));
+        progress = (ProgressBar) view.findViewById(R.id.progress);
+        rl_progress_bar = (RelativeLayout) view.findViewById(R.id.rl_progress_bar);
 
         getRanks();
         getBranches();
+        queueHandler = new Handler(Looper.getMainLooper());
+        queueHandler.postDelayed(() -> {
+            ArrayAdapter<String> branchAdapter = new ArrayAdapter<String>(getContext(),
+                    android.R.layout.simple_spinner_item, branch_list);
+
+            branchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spBranch.setAdapter(branchAdapter);
+            spBranch.setOnItemSelectedListener(this);
+            // spBranch.setPrompt("Select Branch");
+
+            spBranch.setAdapter(
+                    new NothingSelectedSpinnerAdapter(
+                            branchAdapter,
+                            R.layout.branch_spinner_row_nothing_selected,
+                            getContext()));
+
+            ArrayAdapter<String> rankAdapter = new ArrayAdapter<String>(getContext(),
+                    android.R.layout.simple_spinner_item, rank_list);
+
+            rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spRanks.setAdapter(rankAdapter);
+            spRanks.setOnItemSelectedListener(this);
+            // spBranch.setPrompt("Select Branch");
+
+            spRanks.setAdapter(
+                    new NothingSelectedSpinnerAdapter(
+                            rankAdapter,
+                            R.layout.ranks_spinner_row_nothing_selected,
+                            getContext()));
+          //  progress.setClickable(false);
+            rl_progress_bar.setClickable(false);
+            progress.setVisibility(View.GONE);
+        }, 15000);
+
+
         /*  // Setting text selector over textviews
         XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
         try {
@@ -174,19 +195,19 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     // Check Validation Method
     private void checkValidation() {
         // Get all edittext texts
-         getfirstName = firstName.getText().toString();
-         getfatherName = fatherName.getText().toString();
-         getCNIC = cnic.getText().toString();
-         getMobileNumber = mobileNumber.getText().toString();
+        getfirstName = firstName.getText().toString();
+        getfatherName = fatherName.getText().toString();
+        getCNIC = cnic.getText().toString();
+        getMobileNumber = mobileNumber.getText().toString();
         if (spBranch.getSelectedItemId() != -1) {
-             getbranch = spBranch.getSelectedItem().toString();
+            getbranch = (int) spBranch.getSelectedItemId();
         }
         if (spRanks.getSelectedItemId() != -1) {
-             rank = spRanks.getSelectedItem().toString();
+            rank = (int) spRanks.getSelectedItemId();
         }
-         getPassword = password.getText().toString();
-         getConfirmPassword = confirmPassword.getText().toString();
-         buckleNum = buckleNumber.getText().toString();
+        getPassword = password.getText().toString();
+        getConfirmPassword = confirmPassword.getText().toString();
+        buckleNum = buckleNumber.getText().toString();
 
         // Pattern match for email id
         // Pattern p = Pattern.compile(Utils.regEx);
@@ -218,7 +239,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         }
     }
 
-    public void registerUser(String fname, String father_name, String CNIC, String mblNum, String branch, String rank, String buckleNum, String pwd) {
+    public void registerUser(String fname, String father_name, String CNIC, String mblNum, int branch, int rank, String buckleNum, String pwd) {
         RegisterUser registerUser = new RegisterUser();
 
         registerUser.setName(fname);
@@ -273,20 +294,18 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     }
 
     public void getRanks() {
+     //   progress.setVisibility(View.VISIBLE);
         final Call<RanksResponseModel> ranks = ServerRequests.getInstance(getContext()).getRanks();
         if (NetworkConnection.isOnline(getContext())) {
             ranks.enqueue(new Callback<RanksResponseModel>() {
                 @Override
                 public void onResponse(Call<RanksResponseModel> call, Response<RanksResponseModel> response) {
                     if (response.isSuccessful()) {
+                        for (int i = 0; i < response.body().getData().size(); i++) {
+                            rank_list.add( response.body().getData().get(i).getName());
+                        }
                         Toast.makeText(getActivity(), "Got all Ranks Successfully", Toast.LENGTH_SHORT)
                                 .show();
-                    /*    arr_ranks[] = new String[]{"",""};
-                        for(int i = 0 ; i < response.body()) {
-                            arr_ranks;
-                        }*/
-
-
                     }
                 }
 
@@ -301,19 +320,24 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     }
 
     public void getBranches() {
-        final Call<BranchesResponseModel> branches = ServerRequests.getInstance(getContext()).getBranches();
+ //       progress.setVisibility(View.VISIBLE);
+        final Call<RanksResponseModel> branches = ServerRequests.getInstance(getContext()).getBranches();
         if (NetworkConnection.isOnline(getContext())) {
-            branches.enqueue(new Callback<BranchesResponseModel>() {
+            branches.enqueue(new Callback<RanksResponseModel>() {
                 @Override
-                public void onResponse(Call<BranchesResponseModel> call, Response<BranchesResponseModel> response) {
+                public void onResponse(Call<RanksResponseModel> call, Response<RanksResponseModel> response) {
                     if (response.isSuccessful()) {
+                        for (int i = 0; i < response.body().getData().size(); i++) {
+                            branch_list.add( response.body().getData().get(i).getName());
+                        }
                         Toast.makeText(getActivity(), "Got all Branches Successfully", Toast.LENGTH_SHORT)
                                 .show();
+
                     }
                 }
 
                 @Override
-                public void onFailure(Call<BranchesResponseModel> call, Throwable t) {
+                public void onFailure(Call<RanksResponseModel> call, Throwable t) {
                     Toast.makeText(getContext(), "Failure", Toast.LENGTH_LONG);
                 }
             });

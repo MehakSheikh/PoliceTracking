@@ -1,6 +1,8 @@
 package com.example.policetracking.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Build;
@@ -10,7 +12,7 @@ import com.example.policetracking.R;
 import com.example.policetracking.activities.LoginActivity;
 import com.google.android.gms.maps.SupportMapFragment;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private SupportMapFragment mapFragment = null;
 
@@ -29,4 +31,11 @@ public class MainActivity extends AppCompatActivity{
         finish();
     }
 
+    /*public void removeFrag() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        manager.getBackStackEntryCount();
+        FragmentTransaction trans = manager.beginTransaction();
+        trans.remove(this);
+        trans.commit();
+    }*/
 }

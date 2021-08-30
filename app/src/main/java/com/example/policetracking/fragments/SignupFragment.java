@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.policetracking.R;
 import com.example.policetracking.adapters.NothingSelectedSpinnerAdapter;
@@ -185,8 +186,10 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
             case R.id.already_user:
                 // Replace login fragment
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fl_signup_container, new LoginFragment(),
-                                Utils.Login_Fragment).commit();
+                        .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                        .replace(R.id.fl_signup_container, new LoginFragment())
+                        .addToBackStack(new LoginFragment().getClass().getSimpleName())
+                        .commitAllowingStateLoss();
                 break;
         }
 
@@ -268,6 +271,11 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                     if (response.isSuccessful()) {
                         Toast.makeText(getActivity(), "Register User Successfully", Toast.LENGTH_SHORT)
                                 .show();
+                        FragmentManager manager = getActivity().getSupportFragmentManager();
+                        manager.getBackStackEntryCount();
+                        FragmentTransaction trans = manager.beginTransaction();
+                        trans.remove(new SignupFragment());
+                        trans.commit();
                         /*if (response.body().getUserType() == 1) {
                             fragmentManager
                                     .beginTransaction()

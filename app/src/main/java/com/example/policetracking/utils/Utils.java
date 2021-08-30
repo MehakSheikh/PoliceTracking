@@ -22,12 +22,12 @@ public class Utils {
 
     //Fragments Tags
     public static final String Login_Fragment = "LoginFragment";
-    public static final String SignUp_Fragment = "SignUp_Fragment";
+    public static final String SignUp_Fragment = "SignupFragment";
     public static final String ForgotPassword_Fragment = "ForgotPassword_Fragment";
   public static final String Home_Fragment = "HomeFragment";
   public static final String User_Listing_Fragment = "UserListingFragment";
   public static final String Maps_Fragment = "MapsFragment";
- public static final String AdminMenu_Fragment = "Menu Fragment";
+ public static final String AdminMenu_Fragment = "AdminMenuFragment";
 
     private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/SecurityApp-0.0.1-SNAPSHOT/api/";
 

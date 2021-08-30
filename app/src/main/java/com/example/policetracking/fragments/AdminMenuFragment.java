@@ -61,21 +61,26 @@ public class AdminMenuFragment extends CoreFragment {
         users_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentManager
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                        .replace(R.id.fl_signup_container,UserListingFragment.instance())
+                        .addToBackStack( Utils.User_Listing_Fragment)
+                        .commitAllowingStateLoss();
+       /*         fragmentManager
                         .beginTransaction()
                         //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
                         .replace(R.id.fl_signup_container, UserListingFragment.instance(),
-                                Utils.User_Listing_Fragment).commit();
+                                Utils.User_Listing_Fragment).commit();*/
             }
         });
         signUp_form.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentManager
-                        .beginTransaction()
-                        //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                        .replace(R.id.fl_signup_container, new SignupFragment(),
-                                Utils.SignUp_Fragment).commit();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                        .replace(R.id.fl_signup_container, new SignupFragment())
+                        .addToBackStack(new SignupFragment().getClass().getSimpleName())
+                        .commitAllowingStateLoss();
 
             }
         });

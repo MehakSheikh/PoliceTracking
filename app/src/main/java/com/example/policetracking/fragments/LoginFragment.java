@@ -170,7 +170,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                 checkValidation();
                 break;
 
-            case R.id.forgot_password:
+    /*        case R.id.forgot_password:
 
                 // Replace forgot password fragment with animation
                 fragmentManager
@@ -179,14 +179,19 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         .replace(R.id.fl_signup_container,
                                 new ForgotPassword_Fragment(),
                                 Utils.ForgotPassword_Fragment).commit();
-                break;
+                break;*/
             case R.id.createAccount:
                 // Replace signup frgament with animation
-                fragmentManager
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                        .replace(R.id.fl_signup_container, new SignupFragment())
+                        .addToBackStack(new SignupFragment().getClass().getSimpleName())
+                        .commitAllowingStateLoss();
+            /*    fragmentManager
                         .beginTransaction()
                         //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
                         .replace(R.id.fl_signup_container, new SignupFragment(),
-                                Utils.SignUp_Fragment).commit();
+                                Utils.SignUp_Fragment).commit();*/
                 break;
         }
 
@@ -238,7 +243,12 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         }
 
         else {
-            LoginUser(cnic,pwd);
+            fragmentManager
+                    .beginTransaction()
+                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
+                    .replace(R.id.fl_signup_container, new AdminMenuFragment(),
+                            Utils.AdminMenu_Fragment).commit();
+          //  LoginUser(cnic,pwd);
             Toast.makeText(getActivity(), "Login.", Toast.LENGTH_SHORT)
                     .show();
         }
@@ -255,17 +265,18 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.body().getUserType() == 1) {
-                            fragmentManager
-                                    .beginTransaction()
-                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                                    .replace(R.id.fl_signup_container, new AdminMenuFragment(),
-                                            Utils.AdminMenu_Fragment).commit();
+
+                            fragmentManager.beginTransaction()
+                                    .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                                    .replace(R.id.fl_signup_container, new AdminMenuFragment())
+                                    .addToBackStack(new AdminMenuFragment().getClass().getSimpleName())
+                                    .commitAllowingStateLoss();
                         } else {
-                            fragmentManager
-                                    .beginTransaction()
-                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                                    .replace(R.id.fl_signup_container, new HomeFragment(),
-                                            Utils.Home_Fragment).commit();
+                            fragmentManager.beginTransaction()
+                                    .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                                    .replace(R.id.fl_signup_container, new HomeFragment())
+                                    .addToBackStack(new HomeFragment().getClass().getSimpleName())
+                                    .commitAllowingStateLoss();
                         }
                     }
                 }

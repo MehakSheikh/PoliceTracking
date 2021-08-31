@@ -1,6 +1,10 @@
 package com.example.policetracking.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -34,9 +38,13 @@ import com.example.policetracking.utils.NetworkConnection;
 import com.example.policetracking.viewmodels.LoginRequest;
 import com.example.policetracking.viewmodels.LoginResponse;
 
+import java.lang.reflect.Method;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static androidx.core.content.ContextCompat.getSystemService;
 
 public class LoginFragment extends CoreFragment implements OnClickListener {
 
@@ -67,6 +75,18 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     // Initiate Views
     private void initViews(View view) {
         fragmentManager = getActivity().getSupportFragmentManager();
+//        ConnectivityManager conMan = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+//           NetworkInfo.State wifi = conMan.getNetworkInfo(1).getState();
+        WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()) {
+            Toast.makeText(getContext(), "WIFI is enabled", Toast.LENGTH_LONG);
+        } else {
+            Toast.makeText(getContext(), "WIFI is disabled", Toast.LENGTH_LONG);
+        }
+        if (isMobileDataEnabled()) {
+            Toast.makeText(getContext(), "MOBILE DATA is enabled", Toast.LENGTH_LONG);
+        } else
+            Toast.makeText(getContext(), "MOBILE DATA is disabled", Toast.LENGTH_LONG);
 
         et_cnic = (EditText) view.findViewById(R.id.et_cnic);
         password = (EditText) view.findViewById(R.id.login_password);
@@ -220,7 +240,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
 
                         }
                     }).setNegativeButton(null, null).show();
-        }else if (cnic.equals("") || cnic.length() == 0){
+        } else if (cnic.equals("") || cnic.length() == 0) {
             AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                     .setTitle("Enter CNIC")
                     //  .setMessage("Are you sure you want to exit?")
@@ -230,7 +250,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
 
                         }
                     }).setNegativeButton(null, null).show();
-        }else if(pwd.equals("") || pwd.length() == 0){
+        } else if (pwd.equals("") || pwd.length() == 0) {
             AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                     .setTitle("Enter Password")
                     //  .setMessage("Are you sure you want to exit?")
@@ -240,15 +260,13 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
 
                         }
                     }).setNegativeButton(null, null).show();
-        }
-
-        else {
+        } else {
             fragmentManager
                     .beginTransaction()
                     //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
                     .replace(R.id.fl_signup_container, new AdminMenuFragment(),
                             Utils.AdminMenu_Fragment).commit();
-          //  LoginUser(cnic,pwd);
+            //  LoginUser(cnic,pwd);
             Toast.makeText(getActivity(), "Login.", Toast.LENGTH_SHORT)
                     .show();
         }
@@ -288,5 +306,20 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         } else {
             Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
         }
+    }
+
+    private boolean isMobileDataEnabled() {
+        boolean mobileDataEnabled = false;
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            Class cmClass = Class.forName(cm.getClass().getName());
+            Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
+            method.setAccessible(true);
+
+            mobileDataEnabled = (Boolean) method.invoke(cm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mobileDataEnabled;
     }
 }

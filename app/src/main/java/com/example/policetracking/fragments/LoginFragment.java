@@ -19,6 +19,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
@@ -32,9 +33,11 @@ import androidx.fragment.app.FragmentManager;
 import com.example.policetracking.R;
 import com.example.policetracking.activities.LoginActivity;
 import com.example.policetracking.activities.MainActivity;
+import com.example.policetracking.utils.TinyDB;
 import com.example.policetracking.utils.Utils;
 import com.example.policetracking.network.ServerRequests;
 import com.example.policetracking.utils.NetworkConnection;
+import com.example.policetracking.utils.Vals;
 import com.example.policetracking.viewmodels.LoginRequest;
 import com.example.policetracking.viewmodels.LoginResponse;
 
@@ -51,12 +54,13 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     RelativeLayout rootLayout;
     private static EditText et_cnic, password;
     private static Button loginButton;
-    private static TextView forgotPassword, signUp;
+    private static TextView forgotPassword;
     private static CheckBox show_hide_password;
     private static LinearLayout loginLayout;
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
-
+    ProgressBar progress ;
+    RelativeLayout rl_progress_bar ;
     public LoginFragment() {
 
     }
@@ -92,7 +96,9 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         password = (EditText) view.findViewById(R.id.login_password);
         loginButton = (Button) view.findViewById(R.id.loginBtn);
         forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
-        signUp = (TextView) view.findViewById(R.id.createAccount);
+        // signUp = (TextView) view.findViewById(R.id.createAccount);
+        progress = (ProgressBar) view.findViewById(R.id.progress);
+        rl_progress_bar = (RelativeLayout) view.findViewById(R.id.rl_progress_bar);
         show_hide_password = (CheckBox) view
                 .findViewById(R.id.show_hide_password);
         loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
@@ -146,7 +152,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     private void setListeners() {
         loginButton.setOnClickListener(this);
         forgotPassword.setOnClickListener(this);
-        signUp.setOnClickListener(this);
+        // signUp.setOnClickListener(this);
 
         // Set check listener over checkbox for showing and hiding password
         show_hide_password
@@ -200,19 +206,19 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                                 new ForgotPassword_Fragment(),
                                 Utils.ForgotPassword_Fragment).commit();
                 break;*/
-            case R.id.createAccount:
+       /*     case R.id.createAccount:
                 // Replace signup frgament with animation
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                         .replace(R.id.fl_signup_container, new SignupFragment())
                         .addToBackStack(new SignupFragment().getClass().getSimpleName())
                         .commitAllowingStateLoss();
-            /*    fragmentManager
+            *//*    fragmentManager
                         .beginTransaction()
                         //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
                         .replace(R.id.fl_signup_container, new SignupFragment(),
-                                Utils.SignUp_Fragment).commit();*/
-                break;
+                                Utils.SignUp_Fragment).commit();*//*
+                break;*/
         }
 
     }
@@ -261,20 +267,23 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         }
                     }).setNegativeButton(null, null).show();
         } else {
-            fragmentManager
+       /*     fragmentManager
                     .beginTransaction()
                     //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                    .replace(R.id.fl_signup_container, new AdminMenuFragment(),
-                            Utils.AdminMenu_Fragment).commit();
-            //  LoginUser(cnic,pwd);
+                    .replace(R.id.fl_signup_container, new HomeFragment(),
+                            Utils.Home_Fragment).commit();*/
+
+            LoginUser(cnic, pwd);
             Toast.makeText(getActivity(), "Login.", Toast.LENGTH_SHORT)
                     .show();
         }
     }
 
-    public void LoginUser(String email, String pwd) {
+    public void LoginUser(String cnic, String pwd) {
+        rl_progress_bar.setClickable(true);
+        progress.setVisibility(View.VISIBLE);
         LoginRequest loginReq = new LoginRequest();
-        loginReq.setEmail(email);
+        loginReq.setCnic(cnic);
         loginReq.setPassword(pwd);
         final Call<LoginResponse> loginRequest = ServerRequests.getInstance(getContext()).loginUser(loginReq);
         if (NetworkConnection.isOnline(getContext())) {
@@ -282,7 +291,17 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (response.isSuccessful()) {
-                        if (response.body().getUserType() == 1) {
+                        rl_progress_bar.setClickable(false);
+                        progress.setVisibility(View.GONE);
+                        if (!response.body().getJwt().equals(""))
+                            TinyDB.getInstance().putString(Vals.TOKEN, response.body().getJwt());
+                            TinyDB.getInstance().putString(Vals.USER_TYPE, response.body().getJwt());
+                        fragmentManager.beginTransaction()
+                                .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                                .replace(R.id.fl_signup_container, new AdminMenuFragment())
+                                //  .addToBackStack(new AdminMenuFragment().getClass().getSimpleName())
+                                .commitAllowingStateLoss();
+                /*        if (response.body().getUserType() == 1) {
 
                             fragmentManager.beginTransaction()
                                     .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
@@ -295,15 +314,19 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                                     .replace(R.id.fl_signup_container, new HomeFragment())
                                     .addToBackStack(new HomeFragment().getClass().getSimpleName())
                                     .commitAllowingStateLoss();
-                        }
+                        }*/
                     }
                 }
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    rl_progress_bar.setClickable(false);
+                    progress.setVisibility(View.GONE);
                 }
             });
         } else {
+            rl_progress_bar.setClickable(false);
+            progress.setVisibility(View.GONE);
             Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
         }
     }

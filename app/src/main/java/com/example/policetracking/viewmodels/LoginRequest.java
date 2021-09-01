@@ -5,19 +5,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginRequest {
 
-    @SerializedName("email")
+    @SerializedName("cnic")
     @Expose
-    private String email;
+    private String cnic;
     @SerializedName("password")
     @Expose
     private String password;
 
-    public String getEmail() {
-        return email;
+    public String getCnic() {
+        return cnic;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCnic(String cnic) {
+        this.cnic = cnic;
     }
 
     public String getPassword() {

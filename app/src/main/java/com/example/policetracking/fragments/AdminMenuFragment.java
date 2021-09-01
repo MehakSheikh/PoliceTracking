@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.policetracking.R;
+import com.example.policetracking.utils.TinyDB;
 import com.example.policetracking.utils.Utils;
+import com.example.policetracking.utils.Vals;
 
 public class AdminMenuFragment extends CoreFragment {
 
-    Button signUp_form, users_list;
+    Button signUp_form, users_list, btn_logout;
 
     private static FragmentManager fragmentManager;
     // TODO: Rename parameter arguments, choose names that match
@@ -57,14 +59,15 @@ public class AdminMenuFragment extends CoreFragment {
         fragmentManager = getActivity().getSupportFragmentManager();
         users_list = (Button) view.findViewById(R.id.users_list);
         signUp_form = (Button) view.findViewById(R.id.signUp_form);
+        btn_logout = (Button) view.findViewById(R.id.btn_logout);
 
         users_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
-                        .replace(R.id.fl_signup_container,UserListingFragment.instance())
-                        .addToBackStack( Utils.User_Listing_Fragment)
+                        .replace(R.id.fl_signup_container, UserListingFragment.instance())
+                        .addToBackStack(Utils.User_Listing_Fragment)
                         .commitAllowingStateLoss();
        /*         fragmentManager
                         .beginTransaction()
@@ -85,6 +88,13 @@ public class AdminMenuFragment extends CoreFragment {
             }
         });
 
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TinyDB.getInstance().putString(Vals.TOKEN, "");
+                TinyDB.getInstance().putString(Vals.USER_TYPE, "");
+            }
+        });
         return view;
     }
 }

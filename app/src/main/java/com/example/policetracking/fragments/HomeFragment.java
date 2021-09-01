@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment implements LocationListener {
             requestPermissions(perms, REQUEST_PERMISSION_LOCATION);
         }
         else
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, (float) 0.5, locationListener);
 
         return view;
     }
@@ -110,11 +110,7 @@ public class HomeFragment extends Fragment implements LocationListener {
     public void onLocationChanged(@NonNull Location loc) {
      //   editLocation.setText("");
         // pb.setVisibility(View.INVISIBLE);
-    /*    Toast.makeText(
-                getContext(),
-                "Location changed: Lat: " + loc.getLatitude() + " Lng: "
-                        + loc.getLongitude(), Toast.LENGTH_SHORT).show();
-     */
+
         String longitude = "Longitude: " + loc.getLongitude();
         Log.v(TAG, longitude);
         String latitude = "Latitude: " + loc.getLatitude();
@@ -136,11 +132,11 @@ public class HomeFragment extends Fragment implements LocationListener {
         }
         String s = longitude + "\n" + latitude + "\n\nMy Current City is: "
                 + cityName;
-        Toast.makeText(
-                getContext(),
-                s, Toast.LENGTH_SHORT).show();*/
+      */
        // editLocation.setText(s);
         String s = longitude + "\n" + latitude ;
+        Log.i("LOCATION", s);
+       // Toast.makeText(getContext(),"Location changed" + s , Toast.LENGTH_LONG  );
         sendLocation(loc.getLongitude(), loc.getLatitude());
     }
 

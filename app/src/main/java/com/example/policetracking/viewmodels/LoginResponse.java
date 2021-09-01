@@ -5,15 +5,27 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
 
-    @SerializedName("user_type")
+    @SerializedName("success")
     @Expose
-    private Integer userType;
+    private Boolean success;
+    @SerializedName("jwt")
+    @Expose
+    private String jwt;
 
-    public Integer getUserType() {
-        return userType;
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public void setUserType(Integer userType) {
-        this.userType = userType;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+    }
+
 }

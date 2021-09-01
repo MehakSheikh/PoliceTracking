@@ -10,6 +10,7 @@ import com.example.policetracking.viewmodels.RegisterUser;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface RestAPI {
@@ -19,21 +20,25 @@ public interface RestAPI {
     String HEADER_TAG_PUBLIC = HEADER_POSTFIX + "public";
 
     String HEADER_DOMAIN = "X-Domain-Info";
-    String HEADER_DOMAIN_LDWW = HEADER_DOMAIN + ": ldww";
+   // String HEADER_DOMAIN_LDWW = HEADER_DOMAIN + ": ldww";
 
-    @POST("auth/register")
+    @POST("api/auth/register")
     Call<RegisterUser> registerUser(@Body RegisterUser registerUser);
 
+    @Headers(HEADER_TAG + HEADER_TAG_PUBLIC)
     @GET("rank")
     Call<RanksResponseModel> getRanks();
 
+    @Headers(HEADER_TAG + HEADER_TAG_PUBLIC)
     @GET("branch")
     Call<RanksResponseModel> getBranches();
 
-    @POST("")
+    @Headers(HEADER_TAG + HEADER_TAG_PUBLIC)
+    @POST("api/auth/login")
     Call<LoginResponse> loginUser(@Body LoginRequest loginRequest);
 
-    @POST("")
+    @Headers(HEADER_TAG + HEADER_TAG_PUBLIC)
+    @POST("location/send")
     Call<LoginResponse> sendLatLong(@Body LatLongRequest latLongRequest);
 
 }

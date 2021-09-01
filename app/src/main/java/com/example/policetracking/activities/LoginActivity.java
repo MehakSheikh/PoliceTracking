@@ -21,7 +21,11 @@ import android.widget.TextView;
 import com.example.policetracking.Message;
 import com.example.policetracking.MyFragmentManager;
 import com.example.policetracking.R;
+import com.example.policetracking.fragments.AdminMenuFragment;
+import com.example.policetracking.fragments.HomeFragment;
 import com.example.policetracking.fragments.LoginFragment;
+import com.example.policetracking.utils.TinyDB;
+import com.example.policetracking.utils.Vals;
 import com.example.policetracking.viewmodels.LoginActivityViewModel;
 
 import org.json.JSONException;
@@ -33,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.lifecycle.ViewModelProviders;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -42,12 +47,12 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
     private EditText mInputMessageView;
     private List<Message> mMessages = new ArrayList<Message>();
     // private Socket mSocket;
-    TextView toolbar_title ;
+    TextView toolbar_title;
     Button btn_send;
     FrameLayout flContainer;
     LocationManager mLocationManager;
     private WebSocketClient webSocketClient;
-	private LoginActivityViewModel mViewModel;
+    private LoginActivityViewModel mViewModel;
 
     /*   {
            try {
@@ -64,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
         toolbar_title = findViewById(R.id.toolbar_title);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-	    mViewModel = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
 
      /*   mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -82,8 +87,17 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
                 30000, mLocationListener);
         createWebSocketClient();
         */
-        replaceFragment(new LoginFragment(), true, false);
+        if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
+            if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equals("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equals("admin")) {
+                replaceFragment(new AdminMenuFragment(), false, false);
+            }
+            else{
+                replaceFragment(new HomeFragment(), false, false);
+            }
+        } else
+            replaceFragment(new LoginFragment(), true, false);
     }
+
     private void addMessage(String username, String message) {
         mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
                 .username(username).message(message).build());

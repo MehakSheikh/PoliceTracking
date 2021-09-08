@@ -59,8 +59,9 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     private static LinearLayout loginLayout;
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
-    ProgressBar progress ;
-    RelativeLayout rl_progress_bar ;
+    ProgressBar progress;
+    RelativeLayout rl_progress_bar;
+
     public LoginFragment() {
 
     }
@@ -274,7 +275,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                             Utils.Home_Fragment).commit();*/
 
             LoginUser(cnic, pwd);
-            Toast.makeText(getActivity(), "Login.", Toast.LENGTH_SHORT)
+            Toast.makeText(getActivity(), "Login Started.", Toast.LENGTH_SHORT)
                     .show();
         }
     }
@@ -293,28 +294,29 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                     if (response.isSuccessful()) {
                         rl_progress_bar.setClickable(false);
                         progress.setVisibility(View.GONE);
-                        if (!response.body().getJwt().equals(""))
+                        if (!response.body().getJwt().equals("")) {
+                            TinyDB.getInstance().putString(Vals.TOKEN, "");
                             TinyDB.getInstance().putString(Vals.TOKEN, response.body().getJwt());
-                            TinyDB.getInstance().putString(Vals.USER_TYPE, response.body().getJwt());
-                        fragmentManager.beginTransaction()
-                                .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
-                                .replace(R.id.fl_signup_container, new AdminMenuFragment())
-                                //  .addToBackStack(new AdminMenuFragment().getClass().getSimpleName())
-                                .commitAllowingStateLoss();
-                /*        if (response.body().getUserType() == 1) {
+                            TinyDB.getInstance().putString(Vals.USER_TYPE, response.body().getRole());
+                            if (response.body().getRole().equals("ADMIN")) {
+                                fragmentManager.beginTransaction()
+                                        .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                                        .replace(R.id.fl_signup_container, new AdminMenuFragment())
+                                        //  .addToBackStack(new AdminMenuFragment().getClass().getSimpleName())
+                                        .commitAllowingStateLoss();
+                            } else {
+                                fragmentManager.beginTransaction()
+                                        .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                                        .replace(R.id.fl_signup_container, new HomeFragment())
+                                        //    .addToBackStack(new HomeFragment().getClass().getSimpleName())
+                                        .commitAllowingStateLoss();
+                            }
+                        }
+                    } else {
+                        rl_progress_bar.setClickable(false);
+                        progress.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), "Invalid Credentials", Toast.LENGTH_LONG);
 
-                            fragmentManager.beginTransaction()
-                                    .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
-                                    .replace(R.id.fl_signup_container, new AdminMenuFragment())
-                                    .addToBackStack(new AdminMenuFragment().getClass().getSimpleName())
-                                    .commitAllowingStateLoss();
-                        } else {
-                            fragmentManager.beginTransaction()
-                                    .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
-                                    .replace(R.id.fl_signup_container, new HomeFragment())
-                                    .addToBackStack(new HomeFragment().getClass().getSimpleName())
-                                    .commitAllowingStateLoss();
-                        }*/
                     }
                 }
 

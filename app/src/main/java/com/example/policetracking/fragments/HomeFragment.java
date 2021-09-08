@@ -43,38 +43,18 @@ import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
 
-public class HomeFragment extends Fragment implements LocationListener {
+public class HomeFragment extends CoreFragment implements LocationListener {
 
     protected LocationManager locationManager;
     protected LocationListener locationListener;
     protected Context context;
     TextView editLocation;
     private static final int REQUEST_PERMISSION_LOCATION = 1002;
-    String lat;
-    String provider;
-    protected String latitude, longitude;
-    protected boolean gps_enabled, network_enabled;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
-
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,7 +117,7 @@ public class HomeFragment extends Fragment implements LocationListener {
         String s = longitude + "\n" + latitude ;
         Log.i("LOCATION", s);
        // Toast.makeText(getContext(),"Location changed" + s , Toast.LENGTH_LONG  );
-        sendLocation(loc.getLongitude(), loc.getLatitude());
+        sendLocation(loc.getLongitude()+"", loc.getLatitude()+"");
     }
 
     @Override
@@ -155,27 +135,30 @@ public class HomeFragment extends Fragment implements LocationListener {
 
     }
 
-    public void sendLocation(double lng, double lat){
+    public void sendLocation(String lng, String lat){
         LatLongRequest latLongRequest = new LatLongRequest();
         latLongRequest.setLatitude(lat);
         latLongRequest.setLongitude(lng);
         final Call<LoginResponse> loginRequest = ServerRequests.getInstance(getContext()).sendLatLong(latLongRequest);
-        if (NetworkConnection.isOnline(getContext())) {
+       // if (NetworkConnection.isOnline(getContext())) {
             loginRequest.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (response.isSuccessful()) {
-                                    
+                    //    Toast.makeText(getContext(), "Success", Toast.LENGTH_LONG);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Log.i("Failure", "failure");
+               //     Toast.makeText(getContext(), "Check you Internet", Toast.LENGTH_LONG);
                 }
             });
-        } else {
-            Toast.makeText(getContext(), "Check you Internet", Toast.LENGTH_LONG);
-        }
+       /* } else {
+            Log.i("Failure", "failure");
+          //  Toast.makeText(getContext(), "Check you Internet", Toast.LENGTH_LONG);
+        }*/
 
     }
 }

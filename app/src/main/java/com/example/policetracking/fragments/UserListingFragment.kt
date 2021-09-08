@@ -1,16 +1,24 @@
 package com.example.policetracking.fragments
 
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import com.example.policetracking.R
 import com.example.policetracking.adapters.DataItemUserListing
 import com.example.policetracking.adapters.ListAdapterUsers
 import com.example.policetracking.databinding.FragmentUserListingBinding
 import com.example.policetracking.models.helper.UserModel
+import com.example.policetracking.network.ServerRequests
 import com.example.policetracking.utils.ItemClickListener
+import com.example.policetracking.utils.NetworkConnection
 import com.example.policetracking.utils.Utils
 import com.example.policetracking.utils.handleClickOnce
 import com.example.policetracking.viewmodels.LoginActivityViewModel
+import com.example.policetracking.viewmodels.RanksResponseModel
+import com.example.policetracking.viewmodels.UserListing.UserListingModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 internal class UserListingFragment private constructor() : BaseFragment() {
@@ -19,9 +27,10 @@ internal class UserListingFragment private constructor() : BaseFragment() {
     private lateinit var mViewModel: LoginActivityViewModel
     private lateinit var mAdapter: ListAdapterUsers
     private var mListUsers: ArrayList<UserModel> = arrayListOf()
-
+    var rank_list: List<String> = java.util.ArrayList()
     override fun init() {
-        setAdapter()
+        getUsers()
+
     }
 
     private fun setAdapter() {
@@ -38,7 +47,7 @@ internal class UserListingFragment private constructor() : BaseFragment() {
                         .commit()
             })
 
-            mListUsers.add(
+        /*    mListUsers.add(
                     UserModel(
                             id = "1",
                             name = "Talha"
@@ -61,7 +70,7 @@ internal class UserListingFragment private constructor() : BaseFragment() {
                             id = "4",
                             name = "Sheikh"
                     )
-            )
+            )*/
 
             setAdapterData()
 
@@ -112,4 +121,65 @@ internal class UserListingFragment private constructor() : BaseFragment() {
         fun instance() = UserListingFragment()
     }
 
+   /* fun getRanks() {
+        //   progress.setVisibility(View.VISIBLE);
+        val ranks = ServerRequests.getInstance(context).ranks
+        if (NetworkConnection.isOnline(context)) {
+            ranks.enqueue(object : Callback<RanksResponseModel> {
+                override fun onResponse(call: Call<RanksResponseModel>, response: Response<RanksResponseModel>) {
+                    if (response.isSuccessful) {
+                        for (i in response.body()!!.data.indices) {
+                            mListUsers.add(
+                                    UserModel(
+                                            id = response.body()!!.data[i].id.toString(),
+                                            name = response.body()!!.data[i].name
+                                    ))
+
+                        }
+                        Toast.makeText(activity, "Got all Ranks Successfully", Toast.LENGTH_SHORT)
+                                .show()
+                    }
+                }
+
+                override fun onFailure(call: Call<RanksResponseModel>, t: Throwable) {
+                    Toast.makeText(context, "Failure", Toast.LENGTH_LONG)
+                }
+            })
+        } else {
+            Toast.makeText(context, "Check your Internet", Toast.LENGTH_LONG)
+        }
+    }*/
+    fun getUsers() {
+        //   progress.setVisibility(View.VISIBLE);
+        val users = ServerRequests.getInstance(context).users
+        if (NetworkConnection.isOnline(context)) {
+            users.enqueue(object : Callback<UserListingModel> {
+                override fun onResponse(call: Call<UserListingModel>, response: Response<UserListingModel>) {
+                    if (response.isSuccessful) {
+                        for (i in response.body()!!.data.content.indices) {
+                            mListUsers.add(
+                                    UserModel(
+                                            id = response.body()!!.data.content[i].id.toString(),
+                                            name = response.body()!!.data.content[i].name
+                                    ))
+                        }
+
+                        setAdapter()
+                        Toast.makeText(activity, "Got all Users Successfully", Toast.LENGTH_SHORT)
+                                .show()
+                    }
+                }
+
+                override fun onFailure(call: Call<UserListingModel>, t: Throwable) {
+                    Toast.makeText(context, "Failure", Toast.LENGTH_LONG)
+                }
+            })
+        } else {
+            Toast.makeText(context, "Check your Internet", Toast.LENGTH_LONG)
+        }
+    }
+}
+
+private fun <E> List<E>.add(name: E) {
+    TODO("Not yet implemented")
 }

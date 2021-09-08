@@ -36,6 +36,7 @@ import com.example.policetracking.utils.Utils;
 import com.example.policetracking.viewmodels.BranchesResponseModel;
 import com.example.policetracking.viewmodels.RanksResponseModel;
 import com.example.policetracking.viewmodels.RegisterUser;
+import com.example.policetracking.viewmodels.UserListing.UserListingModel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -102,7 +103,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
             branchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBranch.setAdapter(branchAdapter);
             spBranch.setOnItemSelectedListener(this);
-            // spBranch.setPrompt("Select Branch");
+             spBranch.setPrompt("Select Branch");
 
             spBranch.setAdapter(
                     new NothingSelectedSpinnerAdapter(
@@ -116,7 +117,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
             rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spRanks.setAdapter(rankAdapter);
             spRanks.setOnItemSelectedListener(this);
-            // spBranch.setPrompt("Select Branch");
+            spRanks.setPrompt("Select Rank");
 
             spRanks.setAdapter(
                     new NothingSelectedSpinnerAdapter(
@@ -126,7 +127,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
           //  progress.setClickable(false);
             rl_progress_bar.setClickable(false);
             progress.setVisibility(View.GONE);
-        }, 15000);
+        }, 10000);
 
 
         /*  // Setting text selector over textviews
@@ -271,24 +272,12 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                     if (response.isSuccessful()) {
                         Toast.makeText(getActivity(), "Register User Successfully", Toast.LENGTH_SHORT)
                                 .show();
-                        FragmentManager manager = getActivity().getSupportFragmentManager();
+                        getActivity().getFragmentManager().popBackStack();
+                    /*    FragmentManager manager = getActivity().getSupportFragmentManager();
                         manager.getBackStackEntryCount();
                         FragmentTransaction trans = manager.beginTransaction();
                         trans.remove(new SignupFragment());
-                        trans.commit();
-                        /*if (response.body().getUserType() == 1) {
-                            fragmentManager
-                                    .beginTransaction()
-                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                                    .replace(R.id.fl_signup_container, UserListingFragment.instance(),
-                                            Utils.User_Listing_Fragment).commit();
-                        } else {
-                            fragmentManager
-                                    .beginTransaction()
-                                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                                    .replace(R.id.fl_signup_container, new HomeFragment(),
-                                            Utils.Home_Fragment).commit();
-                        }*/
+                        trans.commit();*/
                     }
                 }
 
@@ -326,6 +315,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
             Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
         }
     }
+
 
     public void getBranches() {
  //       progress.setVisibility(View.VISIBLE);

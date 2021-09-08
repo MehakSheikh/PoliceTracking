@@ -64,13 +64,13 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.logintry);
 
         toolbar_title = findViewById(R.id.toolbar_title);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         mViewModel = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
-
+        TinyDB.dbContext = getApplicationContext();
      /*   mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -87,7 +87,8 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
                 30000, mLocationListener);
         createWebSocketClient();
         */
-        if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
+        createWebSocketClient();
+     /*   if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
             if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equals("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equals("admin")) {
                 replaceFragment(new AdminMenuFragment(), false, false);
             }
@@ -95,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
                 replaceFragment(new HomeFragment(), false, false);
             }
         } else
-            replaceFragment(new LoginFragment(), true, false);
+            replaceFragment(new LoginFragment(), true, false);*/
     }
 
     private void addMessage(String username, String message) {
@@ -111,12 +112,12 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                         .replace(R.id.fl_signup_container, f)
-                        .addToBackStack(f.getClass().getSimpleName())
+                     //   .addToBackStack(f.getClass().getSimpleName())
                         .commitAllowingStateLoss();
             } else {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_signup_container, f)
-                        .addToBackStack(f.getClass().getSimpleName())
+                      //  .addToBackStack(f.getClass().getSimpleName())
                         .commitAllowingStateLoss();
             }
         } catch (Exception e) {
@@ -129,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
         toolbar_title.setText("Login");
     }
     //working
-   /* private void createWebSocketClient() {
+    private void createWebSocketClient() {
         URI uri;
         try {
             // Connect to local host
@@ -156,6 +157,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
                         try{
                             TextView textView = findViewById(R.id.titleText);
                             textView.setText(message);
+                            Log.i("msg",message );
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -209,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
         public void onLocationChanged(final Location location) {
             //your code here
         }
-    };*/
+    };
 
 
 }

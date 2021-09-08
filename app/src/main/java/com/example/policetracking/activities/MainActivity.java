@@ -10,6 +10,8 @@ import android.os.Bundle;
 
 import com.example.policetracking.R;
 import com.example.policetracking.activities.LoginActivity;
+import com.example.policetracking.utils.TinyDB;
+import com.example.policetracking.utils.Vals;
 import com.google.android.gms.maps.SupportMapFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,8 +27,19 @@ public class MainActivity extends AppCompatActivity {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.background_color));
         }
-
-        Intent i = new Intent(this, LoginActivity.class);
+/*      if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
+            if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equals("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equals("admin")) {
+                Intent i = new Intent(this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+            else{
+                Intent i = new Intent(this, HomeConstableActivity.class);
+                startActivity(i);
+                finish();
+            }
+        }*/
+        Intent i = new Intent(this, HomeConstableActivity.class);
         startActivity(i);
         finish();
     }

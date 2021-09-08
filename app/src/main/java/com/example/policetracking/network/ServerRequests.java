@@ -55,7 +55,7 @@ public class ServerRequests {
 //                            Logger.d(ServerRequests.class.getName(), "Token: " + token + "\n" + "Url: " + original.url().toString());
                             Request request = original.newBuilder()
                                     .addHeader("X-Domain-Info", TinyDB.getInstance().getString("domain", ""))
-                                    .addHeader("Authorization", "JWT " + token)
+                                    .addHeader("Authorization", "Bearer " + token)
                                     .addHeader("Accept-Language", locale)
                                     .removeHeader(RestAPI.HEADER_TAG)
                                     .method(original.method(), original.body())

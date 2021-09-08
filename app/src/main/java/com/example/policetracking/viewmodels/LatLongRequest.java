@@ -5,26 +5,48 @@ import com.google.gson.annotations.SerializedName;
 
 public class LatLongRequest {
 
-    @SerializedName("latitude")
+    @SerializedName("lat")
     @Expose
-    private double latitude;
-    @SerializedName("longitude")
+    private String latitude;
+    @SerializedName("lng")
     @Expose
-    private double longitude;
+    private String longitude;
+    @SerializedName("action")
+    @Expose
+    private String action;
+    @SerializedName("userId")
+    @Expose
+    private Long userId;
 
-    public double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

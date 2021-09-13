@@ -124,9 +124,9 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
         try {
             // Connect to local host
             //   uri = new URI("ws://10.0.2.2:8080/websocket");  //for emulator
-         //   uri = new URI("wss://194.163.158.81:8080/websocket");    // for real device
+            uri = new URI("ws://194.163.158.81:8080/police-tracking/websocket");    // for real device
 //          uri = new URI("ws://192.168.100.3:8080/websocket");    // for real device
-           uri = new URI("wss://tomcat-server88.paybot.pk:8080/police-tracking/websocket");    // for real device
+//           uri = new URI("wss://tomcat-server88.paybot.pk:8080/police-tracking/websocket");    // for real device
         }
         catch (URISyntaxException e) {
             e.printStackTrace();
@@ -178,6 +178,34 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
         webSocketClient.enableAutomaticReconnection(5000);
         webSocketClient.connect();
     }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location loc) {
+            //your code here
+            String longitude = "Longitude: " + loc.getLongitude();
+            Log.v(TAG, longitude);
+            String latitude = "Latitude: " + loc.getLatitude();
+            Log.v(TAG, latitude);
+            String s = longitude + "\n" + latitude ;
+            Log.i("LOCATION", s);
+            sendMessage(loc.getLongitude() +"", loc.getLatitude()+"");
+        }
+        @Override
+        public void onProviderEnabled(@NonNull String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(@NonNull String provider) {
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+    };
     public void sendMessage(String lat, String lng) {
         Gson gson = new Gson();
         Log.i("WebSocket", "Send Lat Lng");
@@ -186,7 +214,7 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
         latLongRequest.setLongitude(lng);
         latLongRequest.setAction("location_send");
         latLongRequest.setUserId((long) 1);
-      //  String convert= latLongRequest.toString();
+        //  String convert= latLongRequest.toString();
         String abc = latLongRequest.toString();
         JSONObject obj = null;
         try {
@@ -211,19 +239,6 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
                 break;
         }*/
     }
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(@NonNull Location loc) {
-            //your code here
-            String longitude = "Longitude: " + loc.getLongitude();
-            Log.v(TAG, longitude);
-            String latitude = "Latitude: " + loc.getLatitude();
-            Log.v(TAG, latitude);
-            String s = longitude + "\n" + latitude ;
-            Log.i("LOCATION", s);
-            sendMessage(loc.getLongitude() +"", loc.getLatitude()+"");
-        }
-    };
 
   /*  public void onLocationChanged(@NonNull Location loc) {
         //   editLocation.setText("");

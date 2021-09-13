@@ -23,11 +23,11 @@ public class Vals {
 public static final String USER_TYPE = "usertype";
 
 
-    private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/police-tracking/api/";
+    private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/police-tracking/api/";/*"http://194.163.158.81:8080/police-tracking/api/";*/
     private static final String BASE_URL_RELEASE = "https://tomcat-server88.paybot.pk/police-tracking/api/";
     private static final String BASE_URL_DEV = "https://tomcat-server88.paybot.pk/police-tracking/api/";
 
-    private static final String BASE_URL_LOCAL = "https://tomcat-server88.paybot.pk/police-tracking/api/";
+    private static final String BASE_URL_LOCAL ="https://tomcat-server88.paybot.pk/police-tracking/api/";
 
     public static String GET_BASE_URL(Context context) {
 

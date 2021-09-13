@@ -87,8 +87,8 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
                 30000, mLocationListener);
         createWebSocketClient();
         */
-        createWebSocketClient();
-     /*   if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
+      //  createWebSocketClient();
+      /*  if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
             if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equals("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equals("admin")) {
                 replaceFragment(new AdminMenuFragment(), false, false);
             }
@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
             }
         } else
             replaceFragment(new LoginFragment(), true, false);*/
+        replaceFragment(new LoginFragment(), true, false);
     }
 
     private void addMessage(String username, String message) {
@@ -135,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements MyFragmentManage
         try {
             // Connect to local host
          //   uri = new URI("ws://10.0.2.2:8080/websocket");  //for emulator
-          uri = new URI("ws://192.168.100.3:8080/websocket");    // for real device
+          uri = new URI("wss://192.168.100.3:8080/websocket");    // for real device
         }
         catch (URISyntaxException e) {
             e.printStackTrace();

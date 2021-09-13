@@ -18,6 +18,19 @@ public class LatLongRequest {
     @Expose
     private Long userId;
 
+    @SerializedName("jwt")
+    @Expose
+    private String jwt;
+
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+    }
+
+
     public String getLatitude() {
         return latitude;
     }

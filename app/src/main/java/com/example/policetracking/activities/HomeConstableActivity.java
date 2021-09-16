@@ -3,9 +3,11 @@ package com.example.policetracking.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -69,7 +71,7 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
         mViewModel = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
         TinyDB.dbContext = getApplicationContext();
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        createWebSocketClient();
+     //   createWebSocketClient();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -84,7 +86,7 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
         else
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, (float) 0.5, mLocationListener);
 
-
+     //   startService();
 
     }
 
@@ -222,7 +224,8 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        webSocketClient.send(obj.toString());
+        startService();
+      //  webSocketClient.send(obj.toString());
         // Send button id string to WebSocket Server
       /*  switch(view.getId()){
             case(R.id.dogButton):
@@ -272,5 +275,17 @@ public class HomeConstableActivity extends AppCompatActivity implements MyFragme
         // Toast.makeText(getContext(),"Location changed" + s , Toast.LENGTH_LONG  );
         sendLocation(loc.getLongitude()+"", loc.getLatitude()+"");
     }*/
+  public void startService() {
+  //    String input = editTextInput.getText().toString();
 
+      Intent serviceIntent = new Intent(this, ExampleService.class);
+      serviceIntent.putExtra("inputExtra", "Your location is sharing");
+
+      ContextCompat.startForegroundService(this, serviceIntent);
+  }
+
+    public void stopService(View v) {
+        Intent serviceIntent = new Intent(this, ExampleService.class);
+        stopService(serviceIntent);
+    }
 }

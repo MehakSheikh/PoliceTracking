@@ -315,8 +315,16 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                     } else {
                         rl_progress_bar.setClickable(false);
                         progress.setVisibility(View.GONE);
-                        Toast.makeText(getContext(), "Invalid Credentials", Toast.LENGTH_LONG);
+                     //   Toast.makeText(getContext(), "Invalid Credentials", Toast.LENGTH_LONG);
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                .setTitle("Invalid Credentials")
+                                //  .setMessage("Are you sure you want to exit?")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
+                                    }
+                                }).setNegativeButton(null, null).show();
                     }
                 }
 

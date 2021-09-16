@@ -88,7 +88,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         password = (EditText) view.findViewById(R.id.password);
         confirmPassword = (EditText) view.findViewById(R.id.confirmPassword);
         signUpButton = (Button) view.findViewById(R.id.signUpBtn);
-        login = (TextView) view.findViewById(R.id.already_user);
+   //     login = (TextView) view.findViewById(R.id.already_user);
         terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
         progress = (ProgressBar) view.findViewById(R.id.progress);
         rl_progress_bar = (RelativeLayout) view.findViewById(R.id.rl_progress_bar);
@@ -173,7 +173,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     // Set Listeners
     private void setListeners() {
         signUpButton.setOnClickListener(this);
-        login.setOnClickListener(this);
+      //  login.setOnClickListener(this);
     }
 
     @Override
@@ -184,14 +184,14 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 checkValidation();
                 break;
 
-            case R.id.already_user:
+          /*  case R.id.already_user:
                 // Replace login fragment
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                         .replace(R.id.fl_signup_container, new LoginFragment())
                         .addToBackStack(new LoginFragment().getClass().getSimpleName())
                         .commitAllowingStateLoss();
-                break;
+                break;*/
         }
 
     }

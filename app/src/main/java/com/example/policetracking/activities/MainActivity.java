@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(getResources().getColor(R.color.background_color));
         }
         if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
-            if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equals("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equals("admin")) {
+            if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equalsIgnoreCase("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equalsIgnoreCase("admin")) {
                 replaceFragment(new AdminMenuFragment(), false, false);
             } else {
                 replaceFragment(new HomeFragment(), false, false);
-               /* Intent i = new Intent(this, HomeConstableActivity.class);
+                /*Intent i = new Intent(this, HomeConstableActivity.class);
                 startActivity(i);
                 finish();*/
             }

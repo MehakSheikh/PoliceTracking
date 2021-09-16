@@ -38,4 +38,5 @@
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 -->
+   <include layout="@layout/content_signup" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

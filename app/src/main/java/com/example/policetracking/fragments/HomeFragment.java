@@ -55,8 +55,8 @@ public class HomeFragment extends CoreFragment implements LocationListener {
 
     {
         try {
-//            mSocket = IO.socket("http://194.163.158.81:3000");
-            mSocket = IO.socket("http://localhost:3000");
+            mSocket = IO.socket("http://194.163.158.81:3000");
+//            mSocket = IO.socket("http://localhost:3000");
         } catch (URISyntaxException e) {
         }
     }

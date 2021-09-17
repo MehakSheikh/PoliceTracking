@@ -48,7 +48,7 @@ internal class MapsFragment private constructor() : BaseFragment() {
     }
 
     private fun setUpLocation() {
-        val position = LatLng(24.8607, 67.0011)
+        val position = LatLng(29.8607, 89.0011)
         mGoogleMap?.clear()
         mMarker = setMarker(position)
         animateCamera(position)

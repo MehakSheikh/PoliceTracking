@@ -43,8 +43,8 @@ public class AdminMenuFragment extends CoreFragment {
 
     {
         try {
-//            mSocket = IO.socket("http://194.163.158.81:3000");
-            mSocket = IO.socket("http://localhost:3000");
+            mSocket = IO.socket("http://194.163.158.81:3000");
+//            mSocket = IO.socket("http://localhost:3000");
         } catch (URISyntaxException e) {
         }
     }

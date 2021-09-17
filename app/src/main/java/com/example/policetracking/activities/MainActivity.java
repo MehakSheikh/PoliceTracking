@@ -1,6 +1,7 @@
 package com.example.policetracking.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -8,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.policetracking.R;
 import com.example.policetracking.activities.LoginActivity;
@@ -35,28 +37,18 @@ public class MainActivity extends AppCompatActivity {
             if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equalsIgnoreCase("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equalsIgnoreCase("admin")) {
                 replaceFragment(new AdminMenuFragment(), false, false);
             } else {
+//                Intent serviceIntent = new Intent(this, ExampleService.class);
+//                serviceIntent.putExtra("inputExtra", "Your location is sharing");
+//                ContextCompat.startForegroundService(this, serviceIntent);
                 replaceFragment(new HomeFragment(), false, false);
-                /*Intent i = new Intent(this, HomeConstableActivity.class);
-                startActivity(i);
-                finish();*/
             }
         } else {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
         }
-       /* Intent i = new Intent(this, HomeConstableActivity.class);
-        startActivity(i);
-        finish();*/
     }
 
-    /*public void removeFrag() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        manager.getBackStackEntryCount();
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.remove(this);
-        trans.commit();
-    }*/
     public void replaceFragment(Fragment f, boolean bStack, boolean withTransition) {
         try {
             if (withTransition) {
@@ -75,5 +67,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
+    public void startService(View v) {
+        String input = "Notify";
+        Intent serviceIntent = new Intent(this, ExampleService.class);
+        serviceIntent.putExtra("inputExtra", input);
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+    public void stopService(View v) {
+        Intent serviceIntent = new Intent(this, ExampleService.class);
+        stopService(serviceIntent);
+    }
 }

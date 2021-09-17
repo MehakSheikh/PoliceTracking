@@ -52,8 +52,8 @@ public class AdminMenuFragment extends CoreFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSocket.on("subscribe", onNewMessage);
-//        mSocket.on("location_receive", onNewMessage2);
+//        mSocket.on("subscribe", onNewMessage);
+        mSocket.on("location_receive", onNewMessage);
 
         mSocket.connect();
     }
@@ -78,6 +78,7 @@ public class AdminMenuFragment extends CoreFragment {
             e.printStackTrace();
         }
         mSocket.emit("subscribe", obj);
+
         users_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +112,7 @@ public class AdminMenuFragment extends CoreFragment {
                 TinyDB.getInstance().putString(Vals.TOKEN, "");
                 TinyDB.getInstance().putString(Vals.USER_TYPE, "");
                 mSocket.disconnect();
-                mSocket.off("subscribe", onNewMessage);
+                mSocket.off("location_receive", onNewMessage);
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                         .replace(R.id.fl_signup_container, new LoginFragment())
@@ -154,28 +155,4 @@ public class AdminMenuFragment extends CoreFragment {
             });
         }
     };
-   /* private Emitter.Listener onNewMessage2 = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.i("Mehak", "Re");
-                    JSONObject data = (JSONObject) args[0];
-                    String lat;
-                    String lng;
-                    try {
-                        lat = data.getString("lat");
-                        lng = data.getString("lng");
-                    } catch (JSONException e) {
-                        return;
-                    }
-                    // add the message to view
-                    //   addMessage(username, message);
-
-                }
-            });
-        }
-    };
-*/
 }

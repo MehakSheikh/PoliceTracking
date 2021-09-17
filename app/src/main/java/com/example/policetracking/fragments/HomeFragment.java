@@ -2,6 +2,7 @@ package com.example.policetracking.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.policetracking.R;
+import com.example.policetracking.activities.ExampleService;
 import com.example.policetracking.utils.TinyDB;
 import com.example.policetracking.utils.Vals;
 import com.example.policetracking.viewmodels.LatLongRequest;
@@ -44,9 +46,10 @@ public class HomeFragment extends CoreFragment implements LocationListener {
     protected LocationListener locationListener;
     protected Context context;
     private static final int REQUEST_PERMISSION_LOCATION = 1002;
-    Button btn_share_loc, btn_disconnect;
-    TextView tv_txt;
+    Button btn_share_loc, btn_logout;
+   public TextView tv_txt;
 
+    String longitude, latitude ;
     private static FragmentManager fragmentManager;
     public HomeFragment() {
     }
@@ -73,10 +76,11 @@ public class HomeFragment extends CoreFragment implements LocationListener {
         View view = inflater.inflate(R.layout.fragment_home2, container, false);
         tv_txt = (TextView) view.findViewById(R.id.tv_txt);
         btn_share_loc = (Button) view.findViewById(R.id.btn_share_loc);
-        btn_disconnect = (Button) view.findViewById(R.id.btn_disconnect);
+        btn_logout = (Button) view.findViewById(R.id.btn_logout);
         fragmentManager = getActivity().getSupportFragmentManager();
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new HomeFragment();
+        tv_txt.setText("");
 
         btn_share_loc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,18 +100,20 @@ public class HomeFragment extends CoreFragment implements LocationListener {
 
                     mSocket.on("location_send", onNewMessage);
                     mSocket.connect();
-                    attemptSend("123.12313123" + "", "234.345345"+ "");
+                    attemptSend("latitude", "longitude");
+                    tv_txt.setText("Your location is sharing");
+                    getActivity().startService(new Intent(getActivity(), ExampleService.class));
                 }
             }
         });
-        btn_disconnect.setOnClickListener(new View.OnClickListener() {
+        btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TinyDB.getInstance().putString(Vals.TOKEN, "");
                 TinyDB.getInstance().putString(Vals.USER_TYPE, "");
                 mSocket.disconnect();
                 mSocket.off("location_send", onNewMessage);
-
+                getActivity().stopService(new Intent(getActivity(), ExampleService.class));
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                         .replace(R.id.fl_signup_container, new LoginFragment())
@@ -119,13 +125,14 @@ public class HomeFragment extends CoreFragment implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location loc) {
-        String longitude = "Longitude: " + loc.getLongitude();
+         longitude  = String.valueOf(loc.getLongitude());
         Log.v(TAG, longitude);
-        String latitude = "Latitude: " + loc.getLatitude();
+         latitude = String.valueOf(loc.getLatitude());
         Log.v(TAG, latitude);
         String s = longitude + "\n" + latitude;
         Log.i("LOCATION", s);
-//        tv_txt.setText(latitude + ", " + longitude);
+      //  tv_txt.setText(latitude + ", " + longitude);
+       // attemptSend(latitude, longitude);
     }
 
     @Override
@@ -162,6 +169,7 @@ public class HomeFragment extends CoreFragment implements LocationListener {
             e.printStackTrace();
         }
         mSocket.emit("location_send", obj);
+     //   tv_txt.setText("Your location is Sharing");
         Log.i("Hello", "Hello Mehak! It is working");
     }
 

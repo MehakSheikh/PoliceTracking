@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/btn_disconnect"
+            android:id="@+id/btn_logout"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -36,7 +36,7 @@
             android:background="@color/white"
             android:padding="8dp"
             android:text="Share Location"
-            app:layout_constraintTop_toBottomOf="@+id/btn_disconnect"
+            app:layout_constraintTop_toBottomOf="@+id/btn_logout"
             android:textColor="@color/background_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -47,7 +47,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="32dp"
-            android:text="Your location is sharing HOMEFRAGMENT"
             android:textColor="@color/white"
             android:textSize="30dp"
             app:layout_constraintEnd_toEndOf="parent"

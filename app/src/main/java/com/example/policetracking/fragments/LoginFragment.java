@@ -38,8 +38,10 @@ import com.example.policetracking.utils.Utils;
 import com.example.policetracking.network.ServerRequests;
 import com.example.policetracking.utils.NetworkConnection;
 import com.example.policetracking.utils.Vals;
+import com.example.policetracking.viewmodels.LatLongRequest;
 import com.example.policetracking.viewmodels.LoginRequest;
 import com.example.policetracking.viewmodels.LoginResponse;
+import com.example.policetracking.viewmodels.locationGet.BranchesResponseModel;
 
 import java.lang.reflect.Method;
 
@@ -315,7 +317,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                     } else {
                         rl_progress_bar.setClickable(false);
                         progress.setVisibility(View.GONE);
-                     //   Toast.makeText(getContext(), "Invalid Credentials", Toast.LENGTH_LONG);
+                        //   Toast.makeText(getContext(), "Invalid Credentials", Toast.LENGTH_LONG);
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                                 .setTitle("Invalid Credentials")
                                 //  .setMessage("Are you sure you want to exit?")
@@ -337,6 +339,32 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         } else {
             rl_progress_bar.setClickable(false);
             progress.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
+        }
+    }
+
+    public void receiveLocation(String jwt) {
+        LatLongRequest latLongRequest = new LatLongRequest();
+        latLongRequest.setJwt(jwt);
+
+        final Call<BranchesResponseModel> loginRequest = ServerRequests.getInstance(getContext()).recLatLong(2);
+        if (NetworkConnection.isOnline(getContext())) {
+            loginRequest.enqueue(new Callback<BranchesResponseModel>() {
+                @Override
+                public void onResponse(Call<BranchesResponseModel> call, Response<BranchesResponseModel> response) {
+                    if (response.isSuccessful()) {
+
+                        Double latitude = Double.valueOf(response.body().getData().getLocation().getLat());
+                        String lng = response.body().getData().getLocation().getLng();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BranchesResponseModel> call, Throwable t) {
+
+                }
+            });
+        } else {
             Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
         }
     }

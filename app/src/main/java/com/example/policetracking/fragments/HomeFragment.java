@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -96,12 +99,12 @@ public class HomeFragment extends CoreFragment implements LocationListener {
                     String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
                     requestPermissions(perms, REQUEST_PERMISSION_LOCATION);
                 } else {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, (float) 0.5, locationListener);
+                   // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, (float) 0.5, locationListener);
 
-                    mSocket.on("location_send", onNewMessage);
+                 /*   mSocket.on("location_send", onNewMessage);
                     mSocket.connect();
-                    attemptSend("latitude", "longitude");
-                    tv_txt.setText("Your location is sharing");
+                    attemptSend("latitude", "longitude");*/
+                    tv_txt.setText("Your location is being shared");
                     getActivity().startService(new Intent(getActivity(), ExampleService.class));
                 }
             }

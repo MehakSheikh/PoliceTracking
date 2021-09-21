@@ -11,6 +11,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +45,13 @@ import com.example.policetracking.viewmodels.LoginResponse;
 import com.example.policetracking.viewmodels.locationGet.BranchesResponseModel;
 
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -240,7 +248,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         // Check for both field is empty or not
         if ((cnic.equals("") || cnic.length() == 0)
                 && (pwd.equals("") || pwd.length() == 0)) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
                     .setTitle("Enter CNIC and Password")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -250,7 +258,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         }
                     }).setNegativeButton(null, null).show();
         } else if (cnic.equals("") || cnic.length() == 0) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
                     .setTitle("Enter CNIC")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -260,7 +268,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         }
                     }).setNegativeButton(null, null).show();
         } else if (pwd.equals("") || pwd.length() == 0) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
                     .setTitle("Enter Password")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -277,8 +285,8 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                             Utils.Home_Fragment).commit();*/
 
             LoginUser(cnic, pwd);
-            Toast.makeText(getActivity(), "Login Started.", Toast.LENGTH_SHORT)
-                    .show();
+//            Toast.makeText(getActivity(), "Login Started.", Toast.LENGTH_SHORT)
+//                    .show();
         }
     }
 
@@ -318,7 +326,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         rl_progress_bar.setClickable(false);
                         progress.setVisibility(View.GONE);
                         //   Toast.makeText(getContext(), "Invalid Credentials", Toast.LENGTH_LONG);
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
                                 .setTitle("Invalid Credentials")
                                 //  .setMessage("Are you sure you want to exit?")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -339,7 +347,16 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         } else {
             rl_progress_bar.setClickable(false);
             progress.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                    .setTitle("Check your Internet Connection")
+                    //  .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setNegativeButton(null, null).show();
+//            Toast.makeText(getActivity(), "Login Started.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -353,9 +370,26 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                 @Override
                 public void onResponse(Call<BranchesResponseModel> call, Response<BranchesResponseModel> response) {
                     if (response.isSuccessful()) {
+                        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+                        int offset = -(calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET)) / (60 * 1000);
+                   /*     Double latitude = Double.valueOf(response.body().getData().getLocation().getLat());
+                        Double lng = Double.valueOf(response.body().getData().getLocation().getLng());
+                        String dateString = response.body().getData().getLocation().getUpdatedAt();
+                        String s1= 2021-09-20 05:21:31"";
+                        String[] words=dateString.split("\\+");//splits the string based on whitespace
+                        dateFormat(words[0]);*/
+                        if (response.body().getData().getLocation()!= null && response.body().getData().getLocation().getUpdatedAt()!= null && !response.body().getData().getLocation().getUpdatedAt().equals("")  )
+                        {}else{
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                                    .setTitle("User not updated location")
+                                    //  .setMessage("Are you sure you want to exit?")
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                        Double latitude = Double.valueOf(response.body().getData().getLocation().getLat());
-                        String lng = response.body().getData().getLocation().getLng();
+                                        }
+                                    }).setNegativeButton(null, null).show();
+                        }
                     }
                 }
 
@@ -382,5 +416,33 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
             e.printStackTrace();
         }
         return mobileDataEnabled;
+    }
+    public  void dateFormat(String dateString){
+        // Get Current Date Time
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm aa");
+        String getCurrentDateTime = sdf.format(c.getTime());
+
+        Log.d("getCurrentDateTime",getCurrentDateTime);
+// getCurrentDateTime: 05/23/2016 18:49 PM
+
+
+        DateTimeFormatter inputFormatter = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm aa", Locale.ENGLISH);
+            LocalDate date = LocalDate.parse(dateString, inputFormatter);
+            String formattedDate = outputFormatter.format(date);
+            System.out.println(formattedDate); // prints 10-04-2018
+        }
+
+        if (getCurrentDateTime.compareTo(dateString) < 0)
+        {
+
+        }
+        else
+        {
+            Log.d("Return","getMyTime older than getCurrentDateTime ");
+        }
     }
 }

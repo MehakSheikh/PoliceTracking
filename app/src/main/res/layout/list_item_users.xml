@@ -21,12 +21,14 @@
         android:onClick="@{(view)->clickListener.onClick(model,view)}"
         android:padding="@dimen/default_16_dp">
 
+
+
         <TextView
             android:id="@+id/txt_view_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{model.name}"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

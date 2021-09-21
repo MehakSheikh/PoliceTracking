@@ -2,6 +2,7 @@ package com.example.policetracking.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.policetracking.R;
 import com.example.policetracking.activities.ExampleService;
+import com.example.policetracking.utils.NetworkConnection;
 import com.example.policetracking.utils.TinyDB;
 import com.example.policetracking.utils.Vals;
 import com.example.policetracking.viewmodels.LatLongRequest;
@@ -50,10 +53,11 @@ public class HomeFragment extends CoreFragment implements LocationListener {
     protected Context context;
     private static final int REQUEST_PERMISSION_LOCATION = 1002;
     Button btn_share_loc, btn_logout;
-   public TextView tv_txt;
+    public TextView tv_txt;
 
-    String longitude, latitude ;
+    String longitude, latitude;
     private static FragmentManager fragmentManager;
+
     public HomeFragment() {
     }
 
@@ -88,27 +92,42 @@ public class HomeFragment extends CoreFragment implements LocationListener {
         btn_share_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                    requestPermissions(perms, REQUEST_PERMISSION_LOCATION);
-                } else {
-                   // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, (float) 0.5, locationListener);
+                if (NetworkConnection.isOnline(getContext())) {
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+                        requestPermissions(perms, REQUEST_PERMISSION_LOCATION);
+                    } else {
+                        // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, (float) 0.5, locationListener);
 
                  /*   mSocket.on("location_send", onNewMessage);
                     mSocket.connect();
                     attemptSend("latitude", "longitude");*/
-                    tv_txt.setText("Your location is being shared");
-                    getActivity().startService(new Intent(getActivity(), ExampleService.class));
+                        tv_txt.setText("Your location is being shared");
+                        getActivity().startService(new Intent(getActivity(), ExampleService.class));
+                    }
+                }
+                else {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                            .setTitle("Check your Internet Connection")
+                            //  .setMessage("Are you sure you want to exit?")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).setNegativeButton(null, null).show();
+//            Toast.makeText(getActivity(), "Login Started.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,14 +147,14 @@ public class HomeFragment extends CoreFragment implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location loc) {
-         longitude  = String.valueOf(loc.getLongitude());
+        longitude = String.valueOf(loc.getLongitude());
         Log.v(TAG, longitude);
-         latitude = String.valueOf(loc.getLatitude());
+        latitude = String.valueOf(loc.getLatitude());
         Log.v(TAG, latitude);
         String s = longitude + "\n" + latitude;
         Log.i("LOCATION", s);
-      //  tv_txt.setText(latitude + ", " + longitude);
-       // attemptSend(latitude, longitude);
+        //  tv_txt.setText(latitude + ", " + longitude);
+        // attemptSend(latitude, longitude);
     }
 
     @Override
@@ -172,7 +191,7 @@ public class HomeFragment extends CoreFragment implements LocationListener {
             e.printStackTrace();
         }
         mSocket.emit("location_send", obj);
-     //   tv_txt.setText("Your location is Sharing");
+        //   tv_txt.setText("Your location is Sharing");
         Log.i("Hello", "Hello Mehak! It is working");
     }
 

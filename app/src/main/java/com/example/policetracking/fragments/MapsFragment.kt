@@ -1,9 +1,10 @@
-
 package com.example.policetracking.fragments
 
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import com.example.policetracking.R
 import com.example.policetracking.databinding.FragmentMapsBinding
@@ -23,17 +24,15 @@ import com.google.android.gms.maps.model.MarkerOptions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
 import java.util.*
 
 internal class MapsFragment private constructor() : BaseFragment() {
-
 
     private lateinit var mBinding: FragmentMapsBinding
     private lateinit var mViewModel: LoginActivityViewModel
     private var mGoogleMap: GoogleMap? = null
     private var mMarker: Marker? = null
-    var longitude: Double? = null
-    var latitude: Double? = null
 
     override fun init() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -47,15 +46,12 @@ internal class MapsFragment private constructor() : BaseFragment() {
                         try {
                             //your method here
                             receiveLocation(TinyDB.getInstance().getString(Vals.TOKEN))
-
                         } catch (e: Exception) {
                         }
                     }
                 }
             }
-            timer.schedule(doAsynchronousTask, 0, 600000) //execute in every 10 minutes
-
-//            setUpLocation()
+            timer.schedule(doAsynchronousTask, 0, 10000) //execute in every 10 minutes
         }
 
         setUserData()
@@ -71,7 +67,7 @@ internal class MapsFragment private constructor() : BaseFragment() {
 
     private fun setUpLocation(lat: Double?, lng: Double?) {
         val position = LatLng(lat!!, lng!!)
-     //   val position = LatLng(24.9073631, 67.0761534)
+        //   val position = LatLng(24.9073631, 67.0761534)
         mGoogleMap?.clear()
         mMarker = setMarker(position)
         animateCamera(position)
@@ -86,7 +82,7 @@ internal class MapsFragment private constructor() : BaseFragment() {
     private fun animateCamera(position: LatLng) {
         mGoogleMap?.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                        position, 13F
+                        position, 18F
                 )
         )
     }
@@ -134,48 +130,54 @@ internal class MapsFragment private constructor() : BaseFragment() {
             loginRequest.enqueue(object : Callback<BranchesResponseModel> {
                 override fun onResponse(call: Call<BranchesResponseModel>, response: Response<BranchesResponseModel>) {
                     if (response.isSuccessful) {
-                        val latitude = response.body()!!.data.location.lat
-                        val longitude = response.body()!!.data.location.lng
 
+                        if (response.body()!!.data.location != null && response.body()!!.data.location.updatedAt != null && response.body()!!.data.location.updatedAt != "") {
+                            val latitude = response.body()!!.data.location.lat
+                            val longitude = response.body()!!.data.location.lng
 
-                        val doubleLat: Double? = latitude.toDouble()
-                        val doubleLng: Double? = longitude.toDouble()
+                            val doubleLat: Double? = latitude.toDouble()
+                            val doubleLng: Double? = longitude.toDouble()
 
-                        setUpLocation(doubleLat, doubleLng)
+                            val dateString = response.body()!!.data.location.updatedAt
+                            dateFormat(dateString)
+
+                            setUpLocation(doubleLat, doubleLng)
+                        } else {
+                            val alertDialog = AlertDialog.Builder(context!!, R.style.AlertDialog)
+                                    .setTitle("User not updated location") //  .setMessage("Are you sure you want to exit?")
+                                    .setPositiveButton("OK") { dialog, which -> }.setNegativeButton(null, null).show()
+                           }
+
                     }
                 }
 
                 override fun onFailure(call: Call<BranchesResponseModel>, t: Throwable) {}
             })
         } else {
-            Toast.makeText(context, "Check your Internet", Toast.LENGTH_LONG)
+            Toast.makeText(context, "Check your Internet Connection", Toast.LENGTH_LONG)
         }
     }
-   /* fun receiveLocation(jwt: String?) {
-        val latLongRequest = LatLongRequest()
-        latLongRequest.jwt = jwt
-        *//*   mViewModel.currentUser?.apply {
-                id_user = id
-            }*//*
-        val receiveLocRequest = ServerRequests.getInstance(context).recLatLong(2)
-        if (NetworkConnection.isOnline(context)) {
-            receiveLocRequest.enqueue(object : Callback<BranchesResponseModel?> {
-                override fun onResponse(call: Call<BranchesResponseModel?>, response: Response<BranchesResponseModel?>) {
-                    if (response.isSuccessful) {
-                        //        locSend("latitude", "longitude");
-//        attemptSend("latitude", "longitude");
 
-                        latitude = response.body()!!.lat
-                        longitude = response.body()!!.lng
+    open fun dateFormat(dateString: String?): Unit {
+        // Get Current Date Time
+        val c = Calendar.getInstance()
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss aa")
+        val getCurrentDateTime = sdf.format(c.time)
+        Log.d("getCurrentDateTime", getCurrentDateTime)
 
-                        setUpLocation(latitude, longitude)
-                    }
-                }
+        val sdf2 = SimpleDateFormat("yyyy-MM-dd hh:mm:ss aa")
 
-                override fun onFailure(call: Call<BranchesResponseModel?>, t: Throwable) {}
-            })
-        } else {
-            Toast.makeText(context, "Check your Internet", Toast.LENGTH_LONG)
+        val lastUpdatedDate = sdf2.parse(dateString)
+        val currentDate = sdf2.parse(getCurrentDateTime)
+
+        // if ((((currentDate.time - lastUpdatedDate.time) / (1000 * 60)) % 60) > 3){
+        if ((currentDate.time - lastUpdatedDate.time) / 60000 > 5) {
+            val alertDialog = this!!.context?.let {
+                AlertDialog.Builder(it,R.style.AlertDialog)
+                        .setTitle("Location not updated for more than 5 minutes") //  .setMessage("Are you sure you want to exit?")
+                        .setPositiveButton("OK") { dialog, which -> }.setNegativeButton(null, null).show()
+                Log.d("Return", "getMyTime greater than getCurrentDateTime ")
+            }
         }
-    }*/
+    }
 }

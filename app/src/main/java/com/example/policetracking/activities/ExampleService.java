@@ -108,7 +108,7 @@ public class ExampleService extends Service implements LocationListener {
             // for ActivityCompat#requestPermissions for more details.
 
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, (float) 0.5, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
             //  mSocket.on("location_send", onNewMessage);
           //  attemptSend("lat", "lng");
 
@@ -246,7 +246,7 @@ public class ExampleService extends Service implements LocationListener {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if (response.isSuccessful()) {
-
+                        Log.i("Hello", "Hello Mehak! It is working");
                     }
                 }
 

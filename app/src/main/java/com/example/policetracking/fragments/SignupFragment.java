@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -89,7 +91,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         confirmPassword = (EditText) view.findViewById(R.id.confirmPassword);
         signUpButton = (Button) view.findViewById(R.id.signUpBtn);
    //     login = (TextView) view.findViewById(R.id.already_user);
-        terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
+     //   terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
         progress = (ProgressBar) view.findViewById(R.id.progress);
         rl_progress_bar = (RelativeLayout) view.findViewById(R.id.rl_progress_bar);
 
@@ -233,13 +235,13 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         else if (!getConfirmPassword.equals(getPassword))
             Toast.makeText(getContext(), "\"Both password doesn't match.", Toast.LENGTH_SHORT).show();
             // Make sure user should check Terms and Conditions checkbox
-        else if (!terms_conditions.isChecked())
-            Toast.makeText(getContext(), "  \"Please select Terms and Conditions.", Toast.LENGTH_SHORT).show();
+//        else if (!terms_conditions.isChecked())
+//            Toast.makeText(getContext(), "  \"Please select Terms and Conditions.", Toast.LENGTH_SHORT).show();
             // Else do signup or do your stuff
         else {
             registerUser(getfirstName, getfatherName, getCNIC, getMobileNumber, getbranch, rank, buckleNum, getPassword);
-            Toast.makeText(getActivity(), "Signup Started.", Toast.LENGTH_SHORT)
-                    .show();
+         /*   Toast.makeText(getActivity(), "Signup Started.", Toast.LENGTH_SHORT)
+                    .show();*/
         }
     }
 
@@ -270,8 +272,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 @Override
                 public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(getActivity(), "Register User Successfully", Toast.LENGTH_SHORT)
-                                .show();
+                        Toast.makeText(getActivity(), "Register User Successfully", Toast.LENGTH_SHORT).show();
                         getActivity().getFragmentManager().popBackStack();
                     /*    FragmentManager manager = getActivity().getSupportFragmentManager();
                         manager.getBackStackEntryCount();
@@ -283,10 +284,27 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
 
                 @Override
                 public void onFailure(Call<RegisterUser> call, Throwable t) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                            .setTitle("Something went wrong")
+                            //  .setMessage("Are you sure you want to exit?")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).setNegativeButton(null, null).show();
                 }
             });
         } else {
-            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                    .setTitle("Check your Internet Connection")
+                    //  .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setNegativeButton(null, null).show();
         }
     }
 
@@ -308,11 +326,11 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
 
                 @Override
                 public void onFailure(Call<RanksResponseModel> call, Throwable t) {
-                    Toast.makeText(getContext(), "Failure", Toast.LENGTH_LONG);
+                    Toast.makeText(getContext(), "Failure", Toast.LENGTH_LONG).show();
                 }
             });
         } else {
-            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
+            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -336,11 +354,11 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
 
                 @Override
                 public void onFailure(Call<RanksResponseModel> call, Throwable t) {
-                    Toast.makeText(getContext(), "Failure", Toast.LENGTH_LONG);
+                    Toast.makeText(getContext(), "Failure", Toast.LENGTH_LONG).show();
                 }
             });
         } else {
-            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG);
+            Toast.makeText(getContext(), "Check your Internet", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -55,28 +55,28 @@ import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
 
-
 public class ExampleService extends Service implements LocationListener {
     public static final String CHANNEL_ID = "exampleServiceChannel";
     protected LocationManager locationManager;
     protected LocationListener locationListener;
     String longitude, latitude;
     private Socket mSocket;
-   public static Context context ;
-    {
+    public static Context context;
+   /* {
         try {
             mSocket = IO.socket("http://194.163.158.81:3000");
 //            mSocket = IO.socket("http://localhost:3000");
         } catch (URISyntaxException e) {
         }
-    }
+}*/
+
     @Override
     public void onCreate() {
         super.onCreate();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new ExampleService();
         context = this;
-        mSocket.connect();
+        // mSocket.connect();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ExampleService extends Service implements LocationListener {
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
             //  mSocket.on("location_send", onNewMessage);
-          //  attemptSend("lat", "lng");
+            //  attemptSend("lat", "lng");
 
         }
         return START_NOT_STICKY;
@@ -131,7 +131,7 @@ public class ExampleService extends Service implements LocationListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Your Location is sharing",
+                    "Your Location is being shared",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
 
@@ -151,7 +151,7 @@ public class ExampleService extends Service implements LocationListener {
         Log.i("LOCATION", s);
 //        locSend("latitude", "longitude");
 //        attemptSend("latitude", "longitude");
-        sendLocation(latitude,longitude);
+        sendLocation(latitude, longitude);
     }
 
     @Override
@@ -168,8 +168,8 @@ public class ExampleService extends Service implements LocationListener {
     public void onProviderDisabled(@NonNull String provider) {
 
     }
-
-    public void attemptSend(String lat, String lng) {
+//SOCKET WORKING
+ /*   public void attemptSend(String lat, String lng) {
         TinyDB.dbContext = getApplication();
         Gson gson = new Gson();
         LatLongRequest latLongRequest = new LatLongRequest();
@@ -233,9 +233,9 @@ public class ExampleService extends Service implements LocationListener {
             }
         }
 
-    };
+    };*/
 
-    public void sendLocation(String lat, String lng){
+    public void sendLocation(String lat, String lng) {
         LatLongRequest latLongRequest = new LatLongRequest();
         latLongRequest.setLatitude(lat);
         latLongRequest.setLongitude(lng);
@@ -256,7 +256,7 @@ public class ExampleService extends Service implements LocationListener {
                 }
             });
         } else {
-      //      Toast.makeText(this, "Check your Internet", Toast.LENGTH_LONG);
+            //      Toast.makeText(this, "Check your Internet", Toast.LENGTH_LONG);
         }
     }
 

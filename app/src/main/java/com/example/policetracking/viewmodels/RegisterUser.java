@@ -16,7 +16,7 @@ public class RegisterUser {
     private String buckleNumber;
     @SerializedName("rankId")
     @Expose
-    private int rankId;
+    private String rankId;
     @SerializedName("cnic")
     @Expose
     private String cnic;
@@ -25,10 +25,26 @@ public class RegisterUser {
     private String password;
     @SerializedName("branchId")
     @Expose
-    private int branchId;
+    private String branchId;
     @SerializedName("contact")
     @Expose
     private String contact;
+
+    public String getRankId() {
+        return rankId;
+    }
+
+    public void setRankId(String rankId) {
+        this.rankId = rankId;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
 
     public String getName() {
         return name;
@@ -81,19 +97,5 @@ public class RegisterUser {
         this.contact = contact;
     }
 
-    public int getRankId() {
-        return rankId;
-    }
 
-    public void setRankId(int rankId) {
-        this.rankId = rankId;
-    }
-
-    public int getBranchId() {
-        return branchId;
-    }
-
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
-    }
 }

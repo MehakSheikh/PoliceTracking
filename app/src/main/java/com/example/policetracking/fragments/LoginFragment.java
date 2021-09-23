@@ -71,6 +71,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     private static FragmentManager fragmentManager;
     ProgressBar progress;
     RelativeLayout rl_progress_bar;
+    AlertDialog alertDialog;
 
     public LoginFragment() {
 
@@ -248,7 +249,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         // Check for both field is empty or not
         if ((cnic.equals("") || cnic.length() == 0)
                 && (pwd.equals("") || pwd.length() == 0)) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+            alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                     .setTitle("Enter CNIC and Password")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -258,7 +259,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         }
                     }).setNegativeButton(null, null).show();
         } else if (cnic.equals("") || cnic.length() == 0) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+            alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                     .setTitle("Enter CNIC")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -268,7 +269,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         }
                     }).setNegativeButton(null, null).show();
         } else if (pwd.equals("") || pwd.length() == 0) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+            alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                     .setTitle("Enter Password")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -326,7 +327,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         rl_progress_bar.setClickable(false);
                         progress.setVisibility(View.GONE);
                         //   Toast.makeText(getContext(), "Invalid Credentials", Toast.LENGTH_LONG);
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                        alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                                 .setTitle("Invalid Credentials")
                                 //  .setMessage("Are you sure you want to exit?")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -347,7 +348,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         } else {
             rl_progress_bar.setClickable(false);
             progress.setVisibility(View.GONE);
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+            alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                     .setTitle("Check your Internet Connection")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -378,9 +379,9 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         String s1= 2021-09-20 05:21:31"";
                         String[] words=dateString.split("\\+");//splits the string based on whitespace
                         dateFormat(words[0]);*/
-                        if (response.body().getData().getLocation()!= null && response.body().getData().getLocation().getUpdatedAt()!= null && !response.body().getData().getLocation().getUpdatedAt().equals("")  )
-                        {}else{
-                            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                        if (response.body().getData().getLocation() != null && response.body().getData().getLocation().getUpdatedAt() != null && !response.body().getData().getLocation().getUpdatedAt().equals("")) {
+                        } else {
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                                     .setTitle("User not updated location")
                                     //  .setMessage("Are you sure you want to exit?")
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -417,15 +418,22 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
         }
         return mobileDataEnabled;
     }
-    public  void dateFormat(String dateString){
+
+    public void dateFormat(String dateString) {
         // Get Current Date Time
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm aa");
         String getCurrentDateTime = sdf.format(c.getTime());
 
-        Log.d("getCurrentDateTime",getCurrentDateTime);
+        Log.d("getCurrentDateTime", getCurrentDateTime);
 // getCurrentDateTime: 05/23/2016 18:49 PM
-
+     /*   long diff = 0;
+        int day = 0;
+        int min = 0;
+        if (diff / 86400 > 0) {
+            day = (int) (diff / 86400);
+            min = day / 60;
+        }*/
 
         DateTimeFormatter inputFormatter = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -436,13 +444,10 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
             System.out.println(formattedDate); // prints 10-04-2018
         }
 
-        if (getCurrentDateTime.compareTo(dateString) < 0)
-        {
+        if (getCurrentDateTime.compareTo(dateString) < 0) {
 
-        }
-        else
-        {
-            Log.d("Return","getMyTime older than getCurrentDateTime ");
+        } else {
+            Log.d("Return", "getMyTime older than getCurrentDateTime ");
         }
     }
 }

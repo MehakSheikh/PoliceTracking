@@ -46,10 +46,10 @@ import io.socket.emitter.Emitter;
 
 import static android.content.ContentValues.TAG;
 
-public class HomeFragment extends CoreFragment implements LocationListener {
+public class HomeFragment extends CoreFragment {
 
     protected LocationManager locationManager;
-    protected LocationListener locationListener;
+    //  protected LocationListener locationListener;
     protected Context context;
     private static final int REQUEST_PERMISSION_LOCATION = 1002;
     Button btn_share_loc, btn_logout;
@@ -61,7 +61,7 @@ public class HomeFragment extends CoreFragment implements LocationListener {
     public HomeFragment() {
     }
 
-    private Socket mSocket;
+  /*  private Socket mSocket;
 
     {
         try {
@@ -69,7 +69,7 @@ public class HomeFragment extends CoreFragment implements LocationListener {
 //            mSocket = IO.socket("http://localhost:3000");
         } catch (URISyntaxException e) {
         }
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,8 +86,8 @@ public class HomeFragment extends CoreFragment implements LocationListener {
         btn_logout = (Button) view.findViewById(R.id.btn_logout);
         fragmentManager = getActivity().getSupportFragmentManager();
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new HomeFragment();
-        tv_txt.setText("");
+        //  locationListener = new HomeFragment();
+        //tv_txt.setText("");
 
         btn_share_loc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,9 +112,8 @@ public class HomeFragment extends CoreFragment implements LocationListener {
                         tv_txt.setText("Your location is being shared");
                         getActivity().startService(new Intent(getActivity(), ExampleService.class));
                     }
-                }
-                else {
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                } else {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                             .setTitle("Check your Internet Connection")
                             //  .setMessage("Are you sure you want to exit?")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -133,8 +132,12 @@ public class HomeFragment extends CoreFragment implements LocationListener {
             public void onClick(View v) {
                 TinyDB.getInstance().putString(Vals.TOKEN, "");
                 TinyDB.getInstance().putString(Vals.USER_TYPE, "");
-                mSocket.disconnect();
-                mSocket.off("location_send", onNewMessage);
+                Long time = null;
+                String txt;
+                txt = time + " minutes";
+
+//                mSocket.disconnect();
+//                mSocket.off("location_send", onNewMessage);
                 getActivity().stopService(new Intent(getActivity(), ExampleService.class));
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
@@ -145,7 +148,7 @@ public class HomeFragment extends CoreFragment implements LocationListener {
         return view;
     }
 
-    @Override
+  /*  @Override
     public void onLocationChanged(@NonNull Location loc) {
         longitude = String.valueOf(loc.getLongitude());
         Log.v(TAG, longitude);
@@ -171,8 +174,8 @@ public class HomeFragment extends CoreFragment implements LocationListener {
     public void onProviderDisabled(@NonNull String provider) {
 
     }
-
-    public void attemptSend(String lat, String lng) {
+*/
+ /*   public void attemptSend(String lat, String lng) {
         TinyDB.dbContext = getContext();
         Gson gson = new Gson();
         LatLongRequest latLongRequest = new LatLongRequest();
@@ -216,12 +219,12 @@ public class HomeFragment extends CoreFragment implements LocationListener {
             });
         }
     };
-
-    @Override
+*/
+   /* @Override
     public void onDestroy() {
         super.onDestroy();
 
         mSocket.disconnect();
         mSocket.off("location_send", onNewMessage);
-    }
+    }*/
 }

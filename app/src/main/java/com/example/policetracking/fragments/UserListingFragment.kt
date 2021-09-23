@@ -1,5 +1,6 @@
 package com.example.policetracking.fragments
 
+import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
@@ -14,7 +15,6 @@ import com.example.policetracking.utils.NetworkConnection
 import com.example.policetracking.utils.Utils
 import com.example.policetracking.utils.handleClickOnce
 import com.example.policetracking.viewmodels.LoginActivityViewModel
-import com.example.policetracking.viewmodels.RanksResponseModel
 import com.example.policetracking.viewmodels.UserListing.UserListingModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,9 +40,12 @@ internal class UserListingFragment private constructor() : BaseFragment() {
                 view.handleClickOnce()
 
                 mViewModel.currentUser = model
-
+                val mapsFragment = MapsFragment()
+                val bundle = Bundle()
+                bundle.putParcelable("KEY_PARSE_DATA", model)
+                mapsFragment.arguments = bundle
                 requireActivity().supportFragmentManager.beginTransaction()
-                        .add(R.id.fl_signup_container, MapsFragment.instance(), Utils.Maps_Fragment)
+                        .add(R.id.fl_signup_container, mapsFragment, Utils.Maps_Fragment)
                         .addToBackStack(Utils.Maps_Fragment)
                         .commit()
             })

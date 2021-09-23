@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import com.example.policetracking.R
 import com.example.policetracking.databinding.FragmentMapsBinding
+import com.example.policetracking.models.helper.UserModel
 import com.example.policetracking.network.ServerRequests
 import com.example.policetracking.utils.NetworkConnection
 import com.example.policetracking.utils.TinyDB
@@ -27,13 +28,14 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-internal class MapsFragment private constructor() : BaseFragment() {
+internal class MapsFragment() : BaseFragment() {
 
     private lateinit var mBinding: FragmentMapsBinding
     private lateinit var mViewModel: LoginActivityViewModel
     private var mGoogleMap: GoogleMap? = null
     private var mMarker: Marker? = null
-
+    var alertDialog: AlertDialog? = null
+    var id_user: Int? = null
     override fun init() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync {
@@ -54,6 +56,8 @@ internal class MapsFragment private constructor() : BaseFragment() {
             timer.schedule(doAsynchronousTask, 0, 10000) //execute in every 10 minutes
         }
 
+        requireArguments()
+        id_user = ((requireArguments().get("KEY_PARSE_DATA") as UserModel).id)!!.toInt()
         setUserData()
     }
 
@@ -119,15 +123,17 @@ internal class MapsFragment private constructor() : BaseFragment() {
 
     companion object {
         @JvmStatic
-        fun instance() = MapsFragment()
+        fun instance(model: UserModel) = MapsFragment().apply {
+
+        }
     }
 
     fun receiveLocation(jwt: String?) {
         val latLongRequest = LatLongRequest()
         latLongRequest.jwt = jwt
-        val loginRequest = ServerRequests.getInstance(context).recLatLong(2)
+        val loginRequest = this!!.id_user?.let { ServerRequests.getInstance(context).recLatLong(it) }
         if (NetworkConnection.isOnline(context)) {
-            loginRequest.enqueue(object : Callback<BranchesResponseModel> {
+            loginRequest!!.enqueue(object : Callback<BranchesResponseModel> {
                 override fun onResponse(call: Call<BranchesResponseModel>, response: Response<BranchesResponseModel>) {
                     if (response.isSuccessful) {
 
@@ -143,10 +149,15 @@ internal class MapsFragment private constructor() : BaseFragment() {
 
                             setUpLocation(doubleLat, doubleLng)
                         } else {
-                            val alertDialog = AlertDialog.Builder(context!!, R.style.AlertDialog)
-                                    .setTitle("User not updated location") //  .setMessage("Are you sure you want to exit?")
-                                    .setPositiveButton("OK") { dialog, which -> }.setNegativeButton(null, null).show()
-                           }
+                            if (alertDialog != null && alertDialog!!.isShowing) {
+                                alertDialog!!.dismiss();
+                            }
+                            alertDialog = context?.let {
+                                AlertDialog.Builder(it, R.style.AlertDialog)
+                                        .setTitle("User haven't allowed access to location yet") //  .setMessage("Are you sure you want to exit?")
+                                        .setPositiveButton("OK") { dialog, which -> }.setNegativeButton(null, null).show()
+                            }
+                        }
 
                     }
                 }
@@ -169,14 +180,24 @@ internal class MapsFragment private constructor() : BaseFragment() {
 
         val lastUpdatedDate = sdf2.parse(dateString)
         val currentDate = sdf2.parse(getCurrentDateTime)
+        var time: Long = (currentDate.time - lastUpdatedDate.time) / 60000
+        var day: Long = 0
+        var txt: String
 
+        txt = "$time minutes"
+        if (time >= 60) {
+            time = time / 60
+            txt = "$time hours"
+        }
         // if ((((currentDate.time - lastUpdatedDate.time) / (1000 * 60)) % 60) > 3){
-        if ((currentDate.time - lastUpdatedDate.time) / 60000 > 5) {
-            val alertDialog = this!!.context?.let {
-                AlertDialog.Builder(it,R.style.AlertDialog)
-                        .setTitle("Location not updated for more than 5 minutes") //  .setMessage("Are you sure you want to exit?")
+        if ((currentDate.time - lastUpdatedDate.time) / 60000 > 15) {
+            if (alertDialog != null && alertDialog!!.isShowing) {
+                alertDialog!!.dismiss();
+            }
+            alertDialog = context?.let {
+                AlertDialog.Builder(it, R.style.AlertDialog)
+                        .setTitle("Location not updated for " + txt + "") //  .setMessage("Are you sure you want to exit?")
                         .setPositiveButton("OK") { dialog, which -> }.setNegativeButton(null, null).show()
-                Log.d("Return", "getMyTime greater than getCurrentDateTime ")
             }
         }
     }

@@ -59,7 +59,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     List<String> rank_list = new ArrayList<String>();
     List<String> branch_list = new ArrayList<String>();
     String getfirstName, getfatherName, getCNIC, getMobileNumber, buckleNum, getPassword, getConfirmPassword;
-    int getbranch, rank ;
+    String getbranch, rank ;
     private static String[] paths = {"1", "2", "3"};
     private Handler queueHandler;
     public SignupFragment() {
@@ -206,10 +206,10 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         getCNIC = cnic.getText().toString();
         getMobileNumber = mobileNumber.getText().toString();
         if (spBranch.getSelectedItemId() != -1) {
-            getbranch = (int) spBranch.getSelectedItemId();
+            getbranch = String.valueOf(spBranch.getSelectedItemId());
         }
         if (spRanks.getSelectedItemId() != -1) {
-            rank = (int) spRanks.getSelectedItemId();
+            rank = String.valueOf(spRanks.getSelectedItemId());
         }
         getPassword = password.getText().toString();
         getConfirmPassword = confirmPassword.getText().toString();
@@ -245,7 +245,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         }
     }
 
-    public void registerUser(String fname, String father_name, String CNIC, String mblNum, int branch, int rank, String buckleNum, String pwd) {
+    public void registerUser(String fname, String father_name, String CNIC, String mblNum, String branch, String rank, String buckleNum, String pwd) {
         RegisterUser registerUser = new RegisterUser();
 
         registerUser.setName(fname);

@@ -81,37 +81,47 @@ public class ExampleService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String input = intent.getStringExtra("inputExtra");
-        createNotificationChannel();
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        if (intent.getAction() == Vals.SERVICE_START) {
+            String input = intent.getStringExtra("inputExtra");
+            createNotificationChannel();
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                    0, notificationIntent, 0);
 
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Your Location is being shared")
-                .setContentText(input)
-                .setSmallIcon(R.drawable.icon_location)
-                .setContentIntent(pendingIntent)
-                .build();
+            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle("Your Location is being shared")
+                    .setContentText(input)
+                    .setSmallIcon(R.drawable.icon_location)
+                    .setContentIntent(pendingIntent)
+                    .build();
 
-        startForeground(1, notification);
+            startForeground(1, notification);
 
-        //do heavy work on a background thread
-        //stopSelf();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            //do heavy work on a background thread
+            //stopSelf();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
 
-        } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
-            //  mSocket.on("location_send", onNewMessage);
-            //  attemptSend("lat", "lng");
+            } else {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 600000, 0, locationListener);
+                //  mSocket.on("location_send", onNewMessage);
+                //  attemptSend("lat", "lng");
 
+            }
+        } else if (intent.getAction() == Vals.SERVICE_STOP) {
+            locationManager.removeUpdates(this::onLocationChanged);
+            locationManager = null;
+            locationManager.removeUpdates(locationListener);
+            stopForeground(true);
+            stopSelf();
+          //  getContext().stopService(new Intent(getContext(), ExampleService.class));
+          //  onDestroy();
         }
         return START_NOT_STICKY;
     }
@@ -119,6 +129,10 @@ public class ExampleService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        locationManager.removeUpdates(locationListener);
+        stopForeground(true);
+        stopSelf();
+
     }
 
     @Nullable

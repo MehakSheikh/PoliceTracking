@@ -111,8 +111,8 @@ public class AdminMenuFragment extends CoreFragment {
             public void onClick(View v) {
                 TinyDB.getInstance().putString(Vals.TOKEN, "");
                 TinyDB.getInstance().putString(Vals.USER_TYPE, "");
-                mSocket.disconnect();
-                mSocket.off("location_receive", onNewMessage);
+//                mSocket.disconnect();
+//                mSocket.off("location_receive", onNewMessage);
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                         .replace(R.id.fl_signup_container, new LoginFragment())

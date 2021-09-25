@@ -22,9 +22,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.fragment_maps.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,7 +55,7 @@ internal class MapsFragment() : BaseFragment() {
                     }
                 }
             }
-            timer.schedule(doAsynchronousTask, 0, 10000) //execute in every 10 minutes
+            timer.schedule(doAsynchronousTask, 0, 600000) //execute in every 10 minutes
         }
 
         requireArguments()
@@ -145,6 +147,8 @@ internal class MapsFragment() : BaseFragment() {
                             val doubleLng: Double? = longitude.toDouble()
 
                             val dateString = response.body()!!.data.location.updatedAt
+                            txt_update_loc.text = ""
+
                             dateFormat(dateString)
 
                             setUpLocation(doubleLat, doubleLng)
@@ -186,17 +190,21 @@ internal class MapsFragment() : BaseFragment() {
 
         txt = "$time minutes"
         if (time >= 60) {
+            val timeInHour = time / 60.toFloat()
+            val rounded = timeInHour.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+
             time = time / 60
-            txt = "$time hours"
+            txt = "$rounded hour"
         }
         // if ((((currentDate.time - lastUpdatedDate.time) / (1000 * 60)) % 60) > 3){
         if ((currentDate.time - lastUpdatedDate.time) / 60000 > 15) {
             if (alertDialog != null && alertDialog!!.isShowing) {
                 alertDialog!!.dismiss();
             }
-            alertDialog = context?.let {
+            txt_update_loc.text = "Last location updated $txt ago"
+                    alertDialog = context?.let {
                 AlertDialog.Builder(it, R.style.AlertDialog)
-                        .setTitle("Location not updated for " + txt + "") //  .setMessage("Are you sure you want to exit?")
+                        .setTitle("Last location updated $txt ago") //  .setMessage("Are you sure you want to exit?")
                         .setPositiveButton("OK") { dialog, which -> }.setNegativeButton(null, null).show()
             }
         }

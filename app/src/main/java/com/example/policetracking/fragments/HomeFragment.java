@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -110,7 +111,15 @@ public class HomeFragment extends CoreFragment {
                     mSocket.connect();
                     attemptSend("latitude", "longitude");*/
                         tv_txt.setText("Your location is being shared");
-                        getActivity().startService(new Intent(getActivity(), ExampleService.class));
+//                        getActivity().startService(new Intent(getActivity(), ExampleService.class));
+
+                        Intent startIntent = new Intent(getActivity(), ExampleService.class);
+                        startIntent.setAction(Vals.SERVICE_START);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            getActivity().startForegroundService(startIntent);
+                        } else {
+                            getActivity().startService(startIntent);
+                        }
                     }
                 } else {
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
@@ -132,13 +141,17 @@ public class HomeFragment extends CoreFragment {
             public void onClick(View v) {
                 TinyDB.getInstance().putString(Vals.TOKEN, "");
                 TinyDB.getInstance().putString(Vals.USER_TYPE, "");
-                Long time = null;
-                String txt;
-                txt = time + " minutes";
-
 //                mSocket.disconnect();
 //                mSocket.off("location_send", onNewMessage);
-                getActivity().stopService(new Intent(getActivity(), ExampleService.class));
+                Intent startIntent = new Intent(getActivity(), ExampleService.class);
+                startIntent.setAction(Vals.SERVICE_STOP);
+              /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    getActivity().startForegroundService(startIntent);
+                } else {
+                    getActivity().stopService(startIntent);
+                }*/
+                getActivity().stopService(startIntent);
+             //   getContext().stopService(new Intent(getContext(), ExampleService.class));
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                         .replace(R.id.fl_signup_container, new LoginFragment())

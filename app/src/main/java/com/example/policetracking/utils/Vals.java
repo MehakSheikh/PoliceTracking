@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.ImageView;
+
 import com.google.gson.Gson;
 import com.readystatesoftware.chuck.BuildConfig;
 
@@ -20,14 +21,16 @@ public class Vals {
     public static final String USER_LOCALE = "user_locale";
 
     public static final String TOKEN = "token";
-public static final String USER_TYPE = "usertype";
+    public static final String USER_TYPE = "usertype";
+    public static final String SERVICE_START = "SERVICESTART";
+    public static final String SERVICE_STOP = "SERVICESTOP";
 
 
     private static final String BASE_URL_STAGING = "https://tomcat-server88.paybot.pk/police-tracking/api/";/*"http://194.163.158.81:8080/police-tracking/api/";*/
     private static final String BASE_URL_RELEASE = "https://tomcat-server88.paybot.pk/police-tracking/api/";
     private static final String BASE_URL_DEV = "https://tomcat-server88.paybot.pk/police-tracking/api/";
 
-    private static final String BASE_URL_LOCAL ="https://tomcat-server88.paybot.pk/police-tracking/api/";
+    private static final String BASE_URL_LOCAL = "https://tomcat-server88.paybot.pk/police-tracking/api/";
 
     public static String GET_BASE_URL(Context context) {
 
@@ -36,17 +39,17 @@ public static final String USER_TYPE = "usertype";
 
         TinyDB tinyDB = TinyDB.getInstance();
 
-                if (BuildConfig.FLAVOR.equals("dev")) {
-                    return BASE_URL_DEV;
-                } else if (BuildConfig.FLAVOR.equals("staging")) {
-                    return BASE_URL_STAGING;
-                } else if (BuildConfig.FLAVOR.equals("live")) {
-                    return BASE_URL_RELEASE;
-                } else if (BuildConfig.FLAVOR.equals("local")) {
-                    return BASE_URL_LOCAL;
-                } else {
-                    return BASE_URL_STAGING;
-                }
+        if (BuildConfig.FLAVOR.equals("dev")) {
+            return BASE_URL_DEV;
+        } else if (BuildConfig.FLAVOR.equals("staging")) {
+            return BASE_URL_STAGING;
+        } else if (BuildConfig.FLAVOR.equals("live")) {
+            return BASE_URL_RELEASE;
+        } else if (BuildConfig.FLAVOR.equals("local")) {
+            return BASE_URL_LOCAL;
+        } else {
+            return BASE_URL_STAGING;
+        }
     }
 
     public static int dpToPx(int dp) {

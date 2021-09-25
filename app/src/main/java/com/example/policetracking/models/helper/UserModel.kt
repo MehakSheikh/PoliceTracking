@@ -7,11 +7,27 @@ data class UserModel(
     val id: String?,
     val name: String?
 ) : Parcelable {
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        TODO("Not yet implemented")
+    constructor(parcel: Parcel) : this(
+            parcel.readString(),
+            parcel.readString()) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeString(name)
     }
 
     override fun describeContents(): Int {
-        TODO("Not yet implemented")
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<UserModel> {
+        override fun createFromParcel(parcel: Parcel): UserModel {
+            return UserModel(parcel)
+        }
+
+        override fun newArray(size: Int): Array<UserModel?> {
+            return arrayOfNulls(size)
+        }
     }
 }

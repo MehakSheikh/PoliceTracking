@@ -28,6 +28,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{model.name}"
+            android:fontFamily="@font/allianzneo_condensed"
+            android:textSize="18dp"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -3,6 +3,8 @@ package com.example.policetracking.viewmodels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class RegisterUser {
 
     @SerializedName("name")
@@ -29,6 +31,28 @@ public class RegisterUser {
     @SerializedName("contact")
     @Expose
     private String contact;
+    @SerializedName("errors")
+    @Expose
+    private RegistrationError errors;
+    @SerializedName("message")
+    @Expose
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public RegistrationError getErrors() {
+        return errors;
+    }
+
+    public void setErrors(RegistrationError errors) {
+        this.errors = errors;
+    }
 
     public String getRankId() {
         return rankId;

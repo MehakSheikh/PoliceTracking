@@ -11,9 +11,12 @@ public class LoginResponse {
     @SerializedName("jwt")
     @Expose
     private String jwt;
-   @SerializedName("role")
+    @SerializedName("role")
     @Expose
     private String role;
+    @SerializedName("message")
+    @Expose
+    private String message;
 
     public Boolean getSuccess() {
         return success;
@@ -38,4 +41,5 @@ public class LoginResponse {
     public void setRole(String role) {
         this.role = role;
     }
+
 }

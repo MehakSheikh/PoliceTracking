@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TinyDB.dbContext = getApplicationContext();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.background_color, this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.blue_light, this.getTheme()));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.background_color));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.blue_light));
         }
         if (!TinyDB.getInstance().getString(Vals.TOKEN).equals("")) {
             if (!TinyDB.getInstance().getString(Vals.USER_TYPE).equalsIgnoreCase("") && TinyDB.getInstance().getString(Vals.USER_TYPE).equalsIgnoreCase("admin")) {

@@ -61,7 +61,6 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 public class LoginFragment extends CoreFragment implements OnClickListener {
 
-    RelativeLayout rootLayout;
     private static EditText et_cnic, password;
     private static Button loginButton;
     private static TextView forgotPassword;
@@ -80,7 +79,6 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        rootLayout = (RelativeLayout) inflater.inflate(R.layout.login_layout, container, false);
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         initViews(view);
@@ -91,8 +89,6 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
     // Initiate Views
     private void initViews(View view) {
         fragmentManager = getActivity().getSupportFragmentManager();
-//        ConnectivityManager conMan = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-//           NetworkInfo.State wifi = conMan.getNetworkInfo(1).getState();
         WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifi.isWifiEnabled()) {
             Toast.makeText(getContext(), "WIFI is enabled", Toast.LENGTH_LONG);
@@ -194,7 +190,6 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                                     | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                             password.setTransformationMethod(PasswordTransformationMethod
                                     .getInstance());// hide password
-
                         }
 
                     }
@@ -207,30 +202,6 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
             case R.id.loginBtn:
                 checkValidation();
                 break;
-
-    /*        case R.id.forgot_password:
-
-                // Replace forgot password fragment with animation
-                fragmentManager
-                        .beginTransaction()
-                        //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                        .replace(R.id.fl_signup_container,
-                                new ForgotPassword_Fragment(),
-                                Utils.ForgotPassword_Fragment).commit();
-                break;*/
-       /*     case R.id.createAccount:
-                // Replace signup frgament with animation
-                fragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
-                        .replace(R.id.fl_signup_container, new SignupFragment())
-                        .addToBackStack(new SignupFragment().getClass().getSimpleName())
-                        .commitAllowingStateLoss();
-            *//*    fragmentManager
-                        .beginTransaction()
-                        //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                        .replace(R.id.fl_signup_container, new SignupFragment(),
-                                Utils.SignUp_Fragment).commit();*//*
-                break;*/
         }
 
     }
@@ -279,15 +250,7 @@ public class LoginFragment extends CoreFragment implements OnClickListener {
                         }
                     }).setNegativeButton(null, null).show();
         } else {
-       /*     fragmentManager
-                    .beginTransaction()
-                    //  .setCustomAnimations(R.anim.right_enter, R.anim.left_out)
-                    .replace(R.id.fl_signup_container, new HomeFragment(),
-                            Utils.Home_Fragment).commit();*/
-
             LoginUser(cnic, pwd);
-//            Toast.makeText(getActivity(), "Login Started.", Toast.LENGTH_SHORT)
-//                    .show();
         }
     }
 

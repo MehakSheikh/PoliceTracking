@@ -196,12 +196,13 @@ internal class MapsFragment() : BaseFragment() {
             time = time / 60
             txt = "$rounded hour"
         }
+        txt_update_loc.text = "Last location updated $txt ago"
         // if ((((currentDate.time - lastUpdatedDate.time) / (1000 * 60)) % 60) > 3){
         if ((currentDate.time - lastUpdatedDate.time) / 60000 > 15) {
             if (alertDialog != null && alertDialog!!.isShowing) {
                 alertDialog!!.dismiss();
             }
-            txt_update_loc.text = "Last location updated $txt ago"
+         //   txt_update_loc.text = "Last location updated $txt ago"
                     alertDialog = context?.let {
                 AlertDialog.Builder(it, R.style.AlertDialog)
                         .setTitle("Last location updated $txt ago") //  .setMessage("Are you sure you want to exit?")

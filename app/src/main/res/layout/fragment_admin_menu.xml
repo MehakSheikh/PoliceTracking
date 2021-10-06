@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@drawable/gradient_bg"
     android:padding="32dp"
     tools:context=".fragments.AdminMenuFragment">
 
@@ -23,15 +23,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:background="@drawable/loginbutton_selector"
+            android:fontFamily="@font/allianzneo_condensedbold"
             android:padding="3dp"
             android:text="Register User"
-            android:textColor="#009688"
+            android:textColor="@color/blue_dark"
             android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/users_list"
@@ -39,9 +39,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/loginbutton_selector"
+            android:fontFamily="@font/allianzneo_condensedbold"
             android:padding="3dp"
             android:text="Users List"
-            android:textColor="#009688"
+            android:textColor="@color/blue_dark"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,9 +55,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/loginbutton_selector"
+            android:fontFamily="@font/allianzneo_condensedbold"
             android:padding="3dp"
             android:text="LOGOUT"
-            android:textColor="#009688"
+            android:textColor="@color/blue_dark"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

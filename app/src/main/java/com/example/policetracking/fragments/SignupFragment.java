@@ -1,7 +1,9 @@
 package com.example.policetracking.fragments;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import android.content.DialogInterface;
@@ -40,6 +42,9 @@ import com.example.policetracking.viewmodels.RanksResponseModel;
 import com.example.policetracking.viewmodels.RegisterUser;
 import com.example.policetracking.viewmodels.UserListing.UserListingModel;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,17 +56,18 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     private static TextView login;
     private static Button signUpButton;
     private static CheckBox terms_conditions;
-    ProgressBar progress ;
-    RelativeLayout rl_progress_bar ;
+    ProgressBar progress;
+    RelativeLayout rl_progress_bar;
     private static FragmentManager fragmentManager;
     private static String[] arr_ranks;
     Spinner spBranch, spRanks;
     List<String> rank_list = new ArrayList<String>();
     List<String> branch_list = new ArrayList<String>();
     String getfirstName, getfatherName, getCNIC, getMobileNumber, buckleNum, getPassword, getConfirmPassword;
-    String getbranch, rank ;
+    String getbranch, rank;
     private static String[] paths = {"1", "2", "3"};
     private Handler queueHandler;
+
     public SignupFragment() {
 
     }
@@ -90,8 +96,8 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         password = (EditText) view.findViewById(R.id.password);
         confirmPassword = (EditText) view.findViewById(R.id.confirmPassword);
         signUpButton = (Button) view.findViewById(R.id.signUpBtn);
-   //     login = (TextView) view.findViewById(R.id.already_user);
-     //   terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
+        //     login = (TextView) view.findViewById(R.id.already_user);
+        //   terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
         progress = (ProgressBar) view.findViewById(R.id.progress);
         rl_progress_bar = (RelativeLayout) view.findViewById(R.id.rl_progress_bar);
 
@@ -105,7 +111,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
             branchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBranch.setAdapter(branchAdapter);
             spBranch.setOnItemSelectedListener(this);
-             spBranch.setPrompt("Select Branch");
+            spBranch.setPrompt("Select Branch");
 
             spBranch.setAdapter(
                     new NothingSelectedSpinnerAdapter(
@@ -126,7 +132,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                             rankAdapter,
                             R.layout.ranks_spinner_row_nothing_selected,
                             getContext()));
-          //  progress.setClickable(false);
+            //  progress.setClickable(false);
             rl_progress_bar.setClickable(false);
             progress.setVisibility(View.GONE);
         }, 10000);
@@ -175,7 +181,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     // Set Listeners
     private void setListeners() {
         signUpButton.setOnClickListener(this);
-      //  login.setOnClickListener(this);
+        //  login.setOnClickListener(this);
     }
 
     @Override
@@ -220,20 +226,26 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
         // Matcher m = p.matcher(getEmailId);
 
         // Check if all strings are null or not
-        if (getfirstName.equals("") || getfirstName.length() == 0
+        if (getfirstName.equals("") || getfirstName.length() == 0 ||
+                getfatherName.equals("") || getfatherName.length() == 0
                 || getCNIC.equals("") || getCNIC.length() == 0
                 || getMobileNumber.equals("") || getMobileNumber.length() == 0
-                //     || getbranch.equals("") || getbranch.length() == 0
+                    /* || getbranch.equals("") || getbranch.length() == 0
+                     || getRanks().equals("") || getRanks().length() == 0*/
+                || buckleNum.equals("") || buckleNum.length() == 0
                 || getPassword.equals("") || getPassword.length() == 0
                 || getConfirmPassword.equals("")
-                || getConfirmPassword.length() == 0 || spBranch.getSelectedItemId() == -1 || spRanks.getSelectedItemId() == -1)
-            Toast.makeText(getContext(), " All fields are required.", Toast.LENGTH_SHORT).show();
-            // Check if email id valid or not
+                || getConfirmPassword.length() == 0 || spBranch.getSelectedItemId() == -1 || spRanks.getSelectedItemId() == -1) {
+            Toast.makeText(getContext(), "All fields are required.", Toast.LENGTH_SHORT).show();
+        } else if (getPassword.length() < 6) {
+            Toast.makeText(getContext(), "\"Password should be 6 characters long.", Toast.LENGTH_SHORT).show();
+        }
+        // Check if email id valid or not
 //        else if (!m.find())
 //            Toast.makeText(getContext(), "Your Email Id is Invalid.", Toast.LENGTH_SHORT).show();
-            // Check if both password should be equal
+        // Check if both password should be equal
         else if (!getConfirmPassword.equals(getPassword))
-            Toast.makeText(getContext(), "\"Both password doesn't match.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Both password doesn't match.", Toast.LENGTH_SHORT).show();
             // Make sure user should check Terms and Conditions checkbox
 //        else if (!terms_conditions.isChecked())
 //            Toast.makeText(getContext(), "  \"Please select Terms and Conditions.", Toast.LENGTH_SHORT).show();
@@ -272,19 +284,61 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 @Override
                 public void onResponse(Call<RegisterUser> call, Response<RegisterUser> response) {
                     if (response.isSuccessful()) {
+
                         Toast.makeText(getActivity(), "Register User Successfully", Toast.LENGTH_SHORT).show();
-                        getActivity().getFragmentManager().popBackStack();
+                        //     getActivity().getFragmentManager().popBackStack();
+                    /*    fragmentManager.beginTransaction()
+                                .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+                                .replace(R.id.fl_signup_container, new AdminMenuFragment())
+                                //  .addToBackStack(new AdminMenuFragment().getClass().getSimpleName())
+                                .commitAllowingStateLoss();*/
                     /*    FragmentManager manager = getActivity().getSupportFragmentManager();
                         manager.getBackStackEntryCount();
                         FragmentTransaction trans = manager.beginTransaction();
-                        trans.remove(new SignupFragment());
+                        trans.remove(new SignupFragment())nad;
                         trans.commit();*/
+                    } else {
+                        if (response.code() == 400) {
+                            String message = "Please enter a different CNIC and Try Again";
+
+                            //   message = response.body().getErrors().getCnic().toString();
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
+                                        .setTitle("CNIC already exist")
+                                    .setMessage(message)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    }).setNegativeButton(null, null).show();
+
+                        }
+                      /*  try {
+                            JSONObject jObjError = new JSONObject((Map) response.errorBody());
+                            if (jObjError.has("errors")) {
+
+                                //  Vals.serverErrorDialog(getContext(), jObjError.getString("Message"));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // Vals.serverErrorDialog(getContext(), "Something went wrong");
+                        }
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
+                                .setTitle("Something went wrong")
+                                .setMessage("Try Again")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                }).setNegativeButton(null, null).show();*/
                     }
                 }
 
+
                 @Override
                 public void onFailure(Call<RegisterUser> call, Throwable t) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                             .setTitle("Something went wrong")
                             //  .setMessage("Are you sure you want to exit?")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -296,7 +350,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 }
             });
         } else {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext(),R.style.AlertDialog)
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialog)
                     .setTitle("Check your Internet Connection")
                     //  .setMessage("Are you sure you want to exit?")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -309,7 +363,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
     }
 
     public void getRanks() {
-     //   progress.setVisibility(View.VISIBLE);
+        //   progress.setVisibility(View.VISIBLE);
         final Call<RanksResponseModel> ranks = ServerRequests.getInstance(getContext()).getRanks();
         if (NetworkConnection.isOnline(getContext())) {
             ranks.enqueue(new Callback<RanksResponseModel>() {
@@ -317,7 +371,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 public void onResponse(Call<RanksResponseModel> call, Response<RanksResponseModel> response) {
                     if (response.isSuccessful()) {
                         for (int i = 0; i < response.body().getData().size(); i++) {
-                            rank_list.add( response.body().getData().get(i).getName());
+                            rank_list.add(response.body().getData().get(i).getName());
                         }
                         Toast.makeText(getActivity(), "Got all Ranks Successfully", Toast.LENGTH_SHORT)
                                 .show();
@@ -336,7 +390,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
 
 
     public void getBranches() {
- //       progress.setVisibility(View.VISIBLE);
+        //       progress.setVisibility(View.VISIBLE);
         final Call<RanksResponseModel> branches = ServerRequests.getInstance(getContext()).getBranches();
         if (NetworkConnection.isOnline(getContext())) {
             branches.enqueue(new Callback<RanksResponseModel>() {
@@ -344,7 +398,7 @@ public class SignupFragment extends CoreFragment implements OnClickListener, Ada
                 public void onResponse(Call<RanksResponseModel> call, Response<RanksResponseModel> response) {
                     if (response.isSuccessful()) {
                         for (int i = 0; i < response.body().getData().size(); i++) {
-                            branch_list.add( response.body().getData().get(i).getName());
+                            branch_list.add(response.body().getData().get(i).getName());
                         }
                         Toast.makeText(getActivity(), "Got all Branches Successfully", Toast.LENGTH_SHORT)
                                 .show();

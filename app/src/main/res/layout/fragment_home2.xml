@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background_color"
+    android:background="@drawable/gradient_bg"
     tools:context=".fragments.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -24,7 +24,8 @@
             android:background="@color/white"
             android:padding="8dp"
             android:text="Logout"
-            android:textColor="@color/background_color"
+            android:fontFamily="@font/allianzneo_condensedbold"
+            android:textColor="@color/blue_dark"
             app:layout_constraintEnd_toEndOf="@+id/btn_share_loc"
             app:layout_constraintStart_toStartOf="@+id/btn_share_loc"
             app:layout_constraintTop_toTopOf="parent" />
@@ -36,8 +37,9 @@
             android:background="@color/white"
             android:padding="8dp"
             android:text="Share Location"
+            android:fontFamily="@font/allianzneo_condensedbold"
             app:layout_constraintTop_toBottomOf="@+id/btn_logout"
-            android:textColor="@color/background_color"
+            android:textColor="@color/blue_dark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -47,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="32dp"
+            android:fontFamily="@font/allianzneo_condensed"
             android:textColor="@color/white"
             android:textSize="30dp"
             app:layout_constraintEnd_toEndOf="parent"

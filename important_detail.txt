@@ -1,2 +1,0 @@
-keytore name : keystore
-pwd : $police2021
